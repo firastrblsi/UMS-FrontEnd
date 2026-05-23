@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAppDispatch } from "../../core/hooks/useAppDispatch";
 import { useAppSelector } from "../../core/hooks/useAppSelector";
