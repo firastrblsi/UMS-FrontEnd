@@ -3,15 +3,16 @@ import { createRoot } from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "./app/store/store";
 import { AppRouter } from "./app/router/AppRouter";
-import { Provider } from "@/components/ui/provider";
+import { ChakraProvider } from "@chakra-ui/react";
 import "./index.css";
+import { system } from "./shared/Theme";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ReduxProvider store={store}>
-      <Provider>
+      <ChakraProvider value={system}>
         <AppRouter />
-      </Provider>
+      </ChakraProvider>
     </ReduxProvider>
   </StrictMode>,
 );
