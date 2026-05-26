@@ -1,62 +1,34 @@
-import { useForm } from "react-hook-form";
-import { useAuth } from "../hooks/useAuth";
-import {
-  loginSchema,
-  type LoginFormValues,
-} from "../../../shared/validation/authSchemas";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import LoginForm from "../components/LoginForm";
+import Sesame from "../../../assets/sesame.jpg";
+import SesameValues from "../../../assets/sesame-values.jpg";
+import Logo from "../../../assets/logo-sesame.png";
 
 const Login = () => {
-  const { login, isLoading, error, dismissError } = useAuth();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-  });
-
-  useEffect(() => {
-    if (error) dismissError();
-  }, []);
-
-  const onSubmit = (values: LoginFormValues) => {
-    login(values.email, values.password);
-  };
-
   return (
-    <div>
-      <h1>Login Page</h1>
-
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-        style={{ display: "flex", flexDirection: "column", gap: 16 }}
-      >
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            {...register("email")} // ✅ FIX
-          />
-          {errors.email && <p>{errors.email.message}</p>}
+    <div className="flex h-screen gradient-bg overflow-hidden">
+      {/* Left Side */}
+      <div className="w-full lg:w-[45%] flex justify-center items-center">
+        <img src={Logo} alt="Logo" className="w-55 absolute top-7 " />
+        <div className="w-[90%] sm:w-[70%] lg:w-[63%] flex flex-col gap-12 items-center">
+          <div className="text-center ">
+            <h1 className="text-3xl">Welcome back</h1>
+            <h3 className="text-muted mt-4">
+              Sign in to your account to continue
+            </h3>
+          </div>
+          <LoginForm />
         </div>
+      </div>
 
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            {...register("password")} // ✅ FIX
-          />
-          {errors.password && <p>{errors.password.message}</p>}
-        </div>
-
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? "Loading..." : "Login"}
-        </button>
-      </form>
+      {/* Right Side */}
+      <div className="hidden lg:flex w-[55%] p-2 me-6 flex-col items-center justify-center">
+        <img src={Sesame} alt="Sesame" className="rounded-t-[40px]" />
+        <img
+          src={SesameValues}
+          alt="Sesame Values"
+          className="rounded-b-[40px]"
+        />
+      </div>
     </div>
   );
 };
