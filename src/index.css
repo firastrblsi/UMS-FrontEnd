@@ -1,0 +1,147 @@
+/* ── ALL @imports must be first ────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/preflight" layer(base);
+@import "tailwindcss/utilities";
+
+/* ── Tailwind v4 theme extension ─────────────────────────────── */
+@theme {
+  /* Fonts */
+  --font-sans: "Poppins", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Primary — deep navy */
+  --color-primary-50: #e6eef4;
+  --color-primary-100: #c0d5e7;
+  --color-primary-200: #96bbda;
+  --color-primary-300: #6ba0cc;
+  --color-primary-400: #4888bf;
+  --color-primary-500: #1a70b1;
+  --color-primary-600: #005a99;
+  --color-primary-700: #004371;
+  --color-primary-800: #003258;
+  --color-primary-900: #001e35;
+  --color-primary-950: #000f1c;
+  --color-primary: #004371;
+  --color-primary-dark: #003258;
+  --color-primary-light: #e6eef4;
+
+  /* Secondary — teal */
+  --color-secondary-50: #e8fafa;
+  --color-secondary-100: #c2f2f2;
+  --color-secondary-200: #8de6e7;
+  --color-secondary-300: #57d9db;
+  --color-secondary-400: #2fccce;
+  --color-secondary-500: #21bfc2;
+  --color-secondary-600: #1a979a;
+  --color-secondary-700: #136e70;
+  --color-secondary-800: #0d4748;
+  --color-secondary-900: #062526;
+  --color-secondary: #21bfc2;
+  --color-secondary-dark: #1a979a;
+  --color-secondary-light: #e8fafa;
+
+  /* Neutrals */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+  --color-neutral-1000: #000000;
+
+  /* Semantic */
+  --color-success: #22c55e;
+  --color-success-bg: #f0fdf4;
+  --color-success-text: #15803d;
+  --color-warning: #f59e0b;
+  --color-warning-bg: #fffbeb;
+  --color-warning-text: #b45309;
+  --color-danger: #f43f5e;
+  --color-danger-bg: #fff1f2;
+  --color-danger-text: #be123c;
+  --color-info: #21bfc2;
+  --color-info-bg: #e8fafa;
+  --color-info-text: #136e70;
+
+  /* Layout */
+  --spacing-sidebar: 240px;
+  --spacing-sidebar-collapsed: 64px;
+  --spacing-topbar: 64px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+}
+
+/* ── Base reset ─────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-neutral-800);
+  background-color: var(--color-neutral-50);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-300);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-400);
+}
+
+.gradient-bg {
+  background: #21bfc2;
+  background: linear-gradient(
+    337deg,
+    rgba(33, 191, 194, 0.52) 0%,
+    rgba(255, 255, 255, 1) 73%
+  );
+}
+
+.sesame {
+  border-radius: 13% 13% 0% 0% / 16% 13% 0% 0%;
+}
