@@ -21,12 +21,18 @@ const Login = () => {
       </div>
 
       {/* Right Side */}
-      <div className="hidden lg:flex w-[55%] p-2 me-6 flex-col items-center justify-center">
-        <img src={Sesame} alt="Sesame" className="rounded-t-[40px]" />
+      <div className="h-full hidden lg:flex w-[55%] flex-col items-center justify-center">
+        <img
+          src={Sesame}
+          alt="Sesame"
+          className="rounded-tl-[40px] h-[75%]"
+          w-full
+          object-cover
+        />
         <img
           src={SesameValues}
           alt="Sesame Values"
-          className="rounded-b-[40px]"
+          className="rounded-bl-[40px] h-[25%] w-full object-cover"
         />
       </div>
     </div>

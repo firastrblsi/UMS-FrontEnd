@@ -20,12 +20,7 @@ export function ProtectedRoute({ allowedRoles }: Props) {
   }
 
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
-    const dashboardByRole: Record<Role, string> = {
-      ADMIN: "/admin/dashboard",
-      TEACHER: "/teacher/dashboard",
-      STUDENT: "/student/dashboard",
-    };
-    return <Navigate to={dashboardByRole[user.role]} replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <Outlet />;

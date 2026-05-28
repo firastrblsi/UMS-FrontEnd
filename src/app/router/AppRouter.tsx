@@ -11,41 +11,18 @@ import {
 import { ProtectedRoute } from "./ProtectedRoute";
 import { authRoutes } from "../../modules/auth/routes/AuthRoutes";
 import { AuthGate } from "./AuthGate";
-
-function PageLoader() {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-      }}
-    >
-      <span style={{ color: "var(--color-neutral-400)", fontSize: 14 }}>
-        Loading…
-      </span>
-    </div>
-  );
-}
+import Loader from "@/shared/ui/Loader";
 
 function RootRedirect() {
   const isInitialized = useAppSelector(selectIsInitialized);
-
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const user = useAppSelector(selectUser);
-  if (!isInitialized) return <PageLoader />;
+  if (!isInitialized) return <Loader />;
 
   if (!isAuthenticated) {
     return <Navigate to="/auth/login" replace />;
   }
 
-  const dashboards = {
-    ADMIN: "/admin/dashboard",
-    TEACHER: "/teacher/dashboard",
-    STUDENT: "/student/dashboard",
-  };
-  return <Navigate to={dashboards[user!.role]} replace />;
+  return <Navigate to="/dashboard" replace />;
 }
 
 export function AppRouter() {
@@ -58,48 +35,94 @@ export function AppRouter() {
   return (
     <BrowserRouter>
       <AuthGate>
-        <Suspense fallback={<PageLoader />}>
+        <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/" element={<RootRedirect />} />
 
             {authRoutes}
 
-            {/* ── Admin (protected) ─────────────────────────────── */}
-            <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
-              {/* <Route path="admin/*" element={<AdminShell />} /> */}
+            <Route element={<ProtectedRoute />}>
+              {/* Dashboard — every role sees this URL; content differs by role */}
               <Route
-                path="admin/*"
-                element={
-                  <div style={{ padding: 32 }}>
-                    Admin shell — coming in Sprint 2
-                  </div>
-                }
+                path="/dashboard"
+                element={<div className="p-8">Dashboard — Sprint 2</div>}
+                // element={<DashboardPage />}
               />
-            </Route>
 
-            {/* ── Teacher (protected) ───────────────────────────── */}
-            <Route element={<ProtectedRoute allowedRoles={["TEACHER"]} />}>
-              {/* <Route path="teacher/*" element={<TeacherShell />} /> */}
+              {/* ── Admin + Teacher only ─────────────────────────── */}
               <Route
-                path="teacher/*"
-                element={
-                  <div style={{ padding: 32 }}>
-                    Teacher shell — coming in Sprint 2
-                  </div>
-                }
+                element={<ProtectedRoute allowedRoles={["ADMIN", "TEACHER"]} />}
+              >
+                <Route
+                  path="/attendance"
+                  element={<div className="p-8">Attendance — Sprint 3</div>}
+                  // element={<AttendancePage />}
+                />
+                <Route
+                  path="/grades"
+                  element={<div className="p-8">Grades — Sprint 4</div>}
+                  // element={<GradesPage />}
+                />
+                <Route
+                  path="/timetable"
+                  element={<div className="p-8">Timetable — Sprint 3</div>}
+                  // element={<TimetablePage />}
+                />
+              </Route>
+
+              {/* ── Admin only ───────────────────────────────────── */}
+              <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+                <Route
+                  path="/students"
+                  element={<div className="p-8">Students — Sprint 2</div>}
+                  // element={<StudentsPage />}
+                />
+                <Route
+                  path="/students/:id"
+                  element={<div className="p-8">Student detail — Sprint 2</div>}
+                />
+                <Route
+                  path="/courses"
+                  element={<div className="p-8">Courses — Sprint 2</div>}
+                  // element={<CoursesPage />}
+                />
+                <Route
+                  path="/structure"
+                  element={<div className="p-8">Structure — Sprint 2</div>}
+                  // element={<StructurePage />}
+                />
+                <Route
+                  path="/finance"
+                  element={<div className="p-8">Finance — Sprint 4</div>}
+                  // element={<FinancePage />}
+                />
+              </Route>
+
+              {/* ── Student only ─────────────────────────────────── */}
+              <Route element={<ProtectedRoute allowedRoles={["STUDENT"]} />}>
+                <Route
+                  path="/my-grades"
+                  element={<div className="p-8">My grades — Sprint 4</div>}
+                />
+                <Route
+                  path="/my-attendance"
+                  element={<div className="p-8">My attendance — Sprint 3</div>}
+                />
+                <Route
+                  path="/my-finance"
+                  element={<div className="p-8">My finance — Sprint 4</div>}
+                />
+              </Route>
+
+              {/* ── All authenticated roles ───────────────────────── */}
+              <Route
+                path="/requests"
+                element={<div className="p-8">Requests — Sprint 4</div>}
+                // element={<RequestsPage />}
               />
-            </Route>
-
-            {/* ── Student (protected) ───────────────────────────── */}
-            <Route element={<ProtectedRoute allowedRoles={["STUDENT"]} />}>
-              {/* <Route path="student/*" element={<StudentShell />} /> */}
               <Route
-                path="student/*"
-                element={
-                  <div style={{ padding: 32 }}>
-                    Student shell — coming in Sprint 2
-                  </div>
-                }
+                path="/profile"
+                element={<div className="p-8">Profile</div>}
               />
             </Route>
 
