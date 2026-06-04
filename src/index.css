@@ -142,6 +142,27 @@ select {
   );
 }
 
-.sesame {
-  border-radius: 13% 13% 0% 0% / 16% 13% 0% 0%;
+.loader {
+  width: fit-content;
+  font-weight: bold;
+  font-family: monospace;
+  white-space: pre;
+  font-size: 30px;
+  line-height: 1.2em;
+  height: 1.2em;
+  overflow: hidden;
+  color: var(--color-primary-800);
+}
+
+.loader:before {
+  content: "Loading...\Aⴳoading...\Aⴳⵓading...\Aⴳⵓⴱding...\Aⴳⵓⴱⵔing...\Aⴳⵓⴱⵔⵉng...\Aⴳⵓⴱⵔⵉⴷ...";
+  white-space: pre;
+  display: inline-block;
+  animation: l39 1.5s infinite steps(7) alternate;
+}
+
+@keyframes l39 {
+  100% {
+    transform: translateY(-100%);
+  }
 }
