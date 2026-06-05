@@ -10,8 +10,10 @@ import { Alert } from "@chakra-ui/react";
 import Input from "@/shared/ui/Input";
 import { Link } from "react-router-dom";
 import { Button } from "@/shared/ui/Button";
+import { useTranslation } from "react-i18next";
 
 const LoginForm = () => {
+  const { t } = useTranslation();
   const { login, isLoading, error, dismissError } = useAuth();
   const {
     register,
@@ -33,20 +35,20 @@ const LoginForm = () => {
       className="flex flex-col  w-full"
     >
       <Input
-        label="Email address"
+        label={t("labels.email")}
         type="email"
         autoComplete="email"
-        placeholder="Email address"
+        placeholder={t("labels.email")}
         autoFocus
         required
         {...register("email")}
         error={errors.email?.message}
       />
       <Input
-        label="Password"
+        label={t("labels.password")}
         revealable
         autoComplete="current-password"
-        placeholder="Password"
+        placeholder={t("labels.password")}
         required
         {...register("password")}
         error={errors.password?.message}

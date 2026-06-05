@@ -1,0 +1,12 @@
+{
+  "auth": {
+    "welcome_back": "Welcome back",
+    "sign_in_header": "Sign in to your account to continue",
+    "forgot_password": "Forgot password?",
+    "sign_in": "Sign in"
+  },
+  "labels": {
+    "email": "Email",
+    "password": "Password"
+  }
+}

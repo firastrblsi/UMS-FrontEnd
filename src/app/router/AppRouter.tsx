@@ -4,7 +4,6 @@ import { useAppDispatch } from "../../core/hooks/useAppDispatch";
 import { useAppSelector } from "../../core/hooks/useAppSelector";
 import { restoreSession } from "../../modules/auth/redux/authSlice";
 import {
-  selectUser,
   selectIsAuthenticated,
   selectIsInitialized,
 } from "../../modules/auth/redux/authSelectors";

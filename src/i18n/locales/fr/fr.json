@@ -1,0 +1,12 @@
+{
+  "auth": {
+    "welcome_back": "Bienvenue de retour",
+    "sign_in_header": "Connectez-vous à votre compte pour continuer",
+    "forgot_password": "Mot de passe oublié ?",
+    "sign_in": "Se connecter"
+  },
+  "labels": {
+    "email": "Email",
+    "password": "Mot de passe"
+  }
+}
