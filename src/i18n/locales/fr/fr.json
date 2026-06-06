@@ -3,10 +3,26 @@
     "welcome_back": "Bienvenue de retour",
     "sign_in_header": "Connectez-vous à votre compte pour continuer",
     "forgot_password": "Mot de passe oublié ?",
-    "sign_in": "Se connecter"
+    "sign_in": "Se connecter",
+    "forget_password_header": "Mot de passe oublié ?",
+    "forget_password_subheader": "Entrez votre email pour recevoir les instructions de réinitialisation du mot de passe",
+    "send_reset_link": "Envoyer le lien de réinitialisation",
+    "back_to_login": "Retour à la page de connexion",
+    "reset_link_sent_to": "Lien de réinitialisation envoyé à",
+    "check_your_email": "Vérifiez votre email pour les instructions de réinitialisation de votre mot de passe",
+    "reset_link_expiry_note": "Vous pouvez trouver dans le délai d'expiration du lien de réinitialisation dans l'email. Si le lien a expiré, vous pouvez en demander un nouveau.",
+    "reset_password": "Réinitialisez votre mot de passe",
+    "reset_password_subheader": "Entrez votre nouveau mot de passe ci-dessous",
+    "password_changed": "Votre mot de passe a été changé avec succès.",
+    "password_changed_description": "Vous pouvez maintenant utiliser votre nouveau mot de passe pour vous connecter.",
+    "invalid_reset_link": "Lien de réinitialisation invalide ou expiré.",
+    "invalid_reset_link_description": "Le lien de réinitialisation est invalide ou a expiré. Veuillez demander une nouvelle réinitialisation de mot de passe.",
+    "request_new_reset_link": "Demander un nouveau lien de réinitialisation"
   },
   "labels": {
     "email": "Email",
-    "password": "Mot de passe"
+    "password": "Mot de passe",
+    "new_password": "Nouveau mot de passe",
+    "confirm_password": "Confirmer le mot de passe"
   }
 }
