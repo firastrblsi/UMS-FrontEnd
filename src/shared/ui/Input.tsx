@@ -53,7 +53,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           />
         )}
         <div className="h-8 ms-2 -translate-y-2">
-          {error && <Field.ErrorText>{error}</Field.ErrorText>}
+          {error && (
+            <div key={error} className="animate-slide-down">
+              <Field.ErrorText>{error}</Field.ErrorText>
+            </div>
+          )}
         </div>
         {hint && !error && (
           <Field.HelperText className="text-xs text-neutral-400">

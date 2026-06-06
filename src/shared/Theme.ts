@@ -1,11 +1,6 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
 const umsConfig = defineConfig({
-  /**
-   * Tell Chakra to look for the "dark" class on <html>
-   * (next-themes sets it there via attribute="class").
-   * Without this Chakra's dark-mode semantic tokens won't activate.
-   */
   globalCss: {
     "html, body": {
       colorScheme: "light dark",
