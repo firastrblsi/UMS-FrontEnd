@@ -15,4 +15,12 @@ export const authApi = {
       .post<{ accessToken: string; user: User }>(`${BASE}/refresh`)
       .then((r) => r.data);
   },
+
+  forgotPassword(email: string): Promise<void> {
+    return axiosInstance.post(`${BASE}/forgot-password`, { email });
+  },
+
+  resetPassword(token: string, newPassword: string): Promise<void> {
+    return axiosInstance.post(`${BASE}/reset-password`, { token, newPassword });
+  },
 };
