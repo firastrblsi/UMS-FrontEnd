@@ -19,6 +19,8 @@ interface ButtonProps extends Omit<
   variant?: ButtonVariant;
   loading?: boolean;
   buttonType?: "primary" | "secondary";
+  height?: number;
+  radius?: number;
 }
 
 const VARIANT_MAP: Record<
@@ -84,7 +86,16 @@ const SECONDARY_CSS: React.CSSProperties = {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { variant = "solid", loading, children, style, buttonType, ...rest },
+    {
+      variant = "solid",
+      loading,
+      children,
+      style,
+      buttonType,
+      height = 42,
+      radius = 15,
+      ...rest
+    },
     ref,
   ) => {
     const { chakraVariant, css: variantCss } = VARIANT_MAP[variant];
@@ -101,8 +112,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         loading={loading}
         style={{ ...resolvedCss, ...style }}
         {...rest}
-        borderRadius="16px"
-        height="42px"
+        borderRadius={radius + "px"}
+        height={height + "px"}
       >
         {children}
       </ChakraButton>

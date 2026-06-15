@@ -35,3 +35,18 @@ export const CLASS_ENDPOINTS = {
   UPDATE: (id: string) => `/classes/${id}`,
   DELETE: (id: string) => `/classes/${id}`,
 };
+
+// Teacher endpoints
+export const TEACHER_ENDPOINTS = {
+  BASE: "/teachers",
+};
+
+// Department endpoints
+export const DEPARTMENT_ENDPOINTS = {
+  BASE: "/departments",
+  GET_ALL: "/departments",
+  GET_BY_ID: (id: string) => `/departments/${id}`,
+  CREATE: "/departments",
+  UPDATE: (id: string) => `/departments/${id}`,
+  DELETE: (id: string) => `/departments/${id}`,
+};

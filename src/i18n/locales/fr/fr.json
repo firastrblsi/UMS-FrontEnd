@@ -23,6 +23,65 @@
     "email": "Email",
     "password": "Mot de passe",
     "new_password": "Nouveau mot de passe",
-    "confirm_password": "Confirmer le mot de passe"
+    "confirm_password": "Confirmer le mot de passe",
+    "name": "Nom",
+    "code": "Code",
+    "dep_chief": "Chef de département",
+    "status": "Statut",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "all": "Tous",
+    "employee_id": "Matricule",
+    "specialization": "Spécialisation",
+    "hire_date": "Date d'embauche",
+    "created": "Créé le",
+    "degree": "Diplôme",
+    "contract": "Contrat",
+    "title": "Titre",
+    "department": "Département"
+  },
+  "teacher": {
+    "title": {
+      "PROF": "Prof.",
+      "DR": "Dr.",
+      "MR": "M.",
+      "MRS": "Mme.",
+      "MS": "Mlle."
+    },
+    "contract": {
+      "PERMANENT": "Permanent",
+      "CONTRACT": "Contractuel",
+      "PART_TIME": "Temps partiel",
+      "VISITING": "Vacataire"
+    },
+    "degree": {
+      "PHD": "Doctorat",
+      "MASTER": "Master",
+      "BACHELOR": "Licence",
+      "OTHER": "Autre"
+    }
+  },
+  "routes": {
+    "dashboard": "Tableau de bord",
+    "students": "Étudiants",
+    "teachers": "Enseignants",
+    "attendance": "Présences",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "departments": "Départements"
+  },
+  "global": {
+    "sesame": "Université <highlight>SESAME</highlight>",
+    "add_department": "Ajouter un département",
+    "add_teacher": "Ajouter un enseignant",
+    "filters": "Filtres",
+    "search": "Rechercher",
+    "reset": "Réinitialiser"
+  },
+  "dialog": {
+    "confirm_close_title": "Abandonner les modifications ?",
+    "confirm_close_message": "Vous avez des modifications non enregistrées. Voulez-vous vraiment fermer ? Toutes les modifications seront perdues.",
+    "keep_editing": "Continuer l'édition",
+    "discard": "Abandonner"
   }
 }

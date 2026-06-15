@@ -22,6 +22,65 @@
     "email": "Email",
     "password": "Password",
     "new_password": "New password",
-    "confirm_password": "Confirm password"
+    "confirm_password": "Confirm password",
+    "name": "Name",
+    "code": "Code",
+    "dep_chief": "Department Head",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "all": "All",
+    "employee_id": "Employee ID",
+    "specialization": "Specialization",
+    "hire_date": "Hire Date",
+    "created": "Created",
+    "degree": "Degree",
+    "contract": "Contract",
+    "title": "Title",
+    "department": "Department"
+  },
+  "teacher": {
+    "title": {
+      "PROF": "Prof.",
+      "DR": "Dr.",
+      "MR": "Mr.",
+      "MRS": "Mrs.",
+      "MS": "Ms."
+    },
+    "contract": {
+      "PERMANENT": "Permanent",
+      "CONTRACT": "Contract",
+      "PART_TIME": "Part-time",
+      "VISITING": "Visiting"
+    },
+    "degree": {
+      "PHD": "PhD",
+      "MASTER": "Master",
+      "BACHELOR": "Bachelor",
+      "OTHER": "Other"
+    }
+  },
+  "routes": {
+    "dashboard": "Dashboard",
+    "students": "Students",
+    "teachers": "Teachers",
+    "attendance": "Attendance",
+    "settings": "Settings",
+    "logout": "Logout",
+    "departments": "Departments"
+  },
+  "global": {
+    "sesame": "<highlight>SESAME</highlight> University",
+    "add_department": "Add a department",
+    "add_teacher": "Add a teacher",
+    "filters": "Filters",
+    "search": "Search",
+    "reset": "Reset"
+  },
+  "dialog": {
+    "confirm_close_title": "Discard changes?",
+    "confirm_close_message": "You have unsaved changes. Are you sure you want to close? All changes will be lost.",
+    "keep_editing": "Keep editing",
+    "discard": "Discard"
   }
 }
