@@ -17,13 +17,13 @@ const studentSchema = z.object({
   firstName: z.string().min(2, 'First name is required'),
   lastName: z.string().min(2, 'Last name is required'),
   phone: z.string().optional(),
-  gender: z.string().optional().transform(v => v === '' ? undefined : v as any),
+  gender: z.any().optional(),
   nationality: z.string().optional(),
   studentNumber: z.string().optional(),
   programId: z.string().optional(),
   nationalId: z.string().optional(),
-  scholarshipType: z.string().optional().transform(v => v === '' ? undefined : v as any),
-  status: z.string().optional().transform(v => v === '' ? undefined : v as any),
+  scholarshipType: z.any().optional(),
+  status: z.any().optional(),
   guardianName: z.string().optional(),
   guardianEmail: z.string().email('Invalid email address').optional().or(z.literal('')),
   guardianPhone: z.string().optional(),
@@ -75,22 +75,22 @@ const UpdateStudentForm = ({ student, onSuccess, onCancel }: UpdateStudentFormPr
       lastName: student.user?.lastName || '',
       email: student.user?.email || '',
       phone: student.user?.phone || '',
-      gender: student.user?.gender as any || '',
+      gender: (student.user as any)?.gender || '',
       studentNumber: student.studentNumber || '',
-      nationalId: student.nationalId || '',
+      nationalId: (student as any).nationalId || '',
       status: student.status || 'ENROLLED',
       scholarshipType: student.scholarshipType || 'NONE',
       guardianName: student.guardianName || '',
       guardianEmail: student.guardianEmail || '',
       guardianPhone: student.guardianPhone || '',
       guardianRelation: student.guardianRelation || '',
-      hasMedicalNeeds: student.hasMedicalNeeds || false,
-      medicalNotes: student.medicalNotes || '',
+      hasMedicalNeeds: (student as any).hasMedicalNeeds || false,
+      medicalNotes: (student as any).medicalNotes || '',
       enrollmentDate: student.enrollmentDate ? student.enrollmentDate.substring(0, 10) : '',
-      currentYearNumber: student.currentYearNumber?.toString() || '',
-      previousInstitution: student.previousInstitution || '',
-      baccalaureateField: student.baccalaureateField || '',
-      baccalaureateYear: student.baccalaureateYear?.toString() || '',
+      currentYearNumber: (student as any).currentYearNumber?.toString() || '',
+      previousInstitution: (student as any).previousInstitution || '',
+      baccalaureateField: (student as any).baccalaureateField || '',
+      baccalaureateYear: (student as any).baccalaureateYear?.toString() || '',
     },
   });
   
@@ -154,8 +154,8 @@ const UpdateStudentForm = ({ student, onSuccess, onCancel }: UpdateStudentFormPr
             >
               {avatarPreview ? (
                 <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
-              ) : student.user?.profilePicture ? (
-                <img src={student.user.profilePicture.url} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (student.user as any)?.profilePicture ? (
+                <img src={(student.user as any).profilePicture.url} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
                 <span className="text-gray-400 text-sm">Upload</span>
               )}
@@ -204,7 +204,7 @@ const UpdateStudentForm = ({ student, onSuccess, onCancel }: UpdateStudentFormPr
           <Select
             label={t("student.gender")}
             {...register('gender')}
-            error={errors.gender?.message}
+            error={errors.gender?.message as string}
             options={[
               { value: '', label: t("student.gender_enum.select") },
               { value: 'MALE', label: t("student.gender_enum.MALE") },
@@ -235,7 +235,7 @@ const UpdateStudentForm = ({ student, onSuccess, onCancel }: UpdateStudentFormPr
           <Select
             label={t("labels.status")}
             {...register('status')}
-            error={errors.status?.message}
+            error={errors.status?.message as string}
             options={[
               { value: 'ENROLLED', label: t("student.status.ENROLLED") },
               { value: 'SUSPENDED', label: t("student.status.SUSPENDED") },
@@ -248,7 +248,7 @@ const UpdateStudentForm = ({ student, onSuccess, onCancel }: UpdateStudentFormPr
           <Select
             label={t("student.scholarship_type")}
             {...register('scholarshipType')}
-            error={errors.scholarshipType?.message}
+            error={errors.scholarshipType?.message as string}
             options={[
               { value: 'NONE', label: t("student.scholarship.NONE") },
               { value: 'PARTIAL', label: t("student.scholarship.PARTIAL") },
@@ -354,7 +354,7 @@ const UpdateStudentForm = ({ student, onSuccess, onCancel }: UpdateStudentFormPr
           type="submit"
           buttonType="primary"
           disabled={isSubmitting}
-          isLoading={isSubmitting}
+          loading={isSubmitting}
         >
           {t("student.save_changes")}
         </Button>

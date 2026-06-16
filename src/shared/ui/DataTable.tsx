@@ -33,7 +33,6 @@ export interface DataTableProps<TData extends Record<string, any>> {
   enableGlobalFilter?: boolean;
   enableColumnFilters?: boolean;
   enableTopToolbar?: boolean;
-  enableTopToolbar?: boolean;
   enableHiding?: boolean;
   initialState?: MRT_TableOptions<TData>["initialState"];
   refetchTrigger?: number;

@@ -11,7 +11,6 @@ import { authApi } from "../api/authApi";
 import { Button } from "@/shared/ui/Button";
 import { Alert } from "@chakra-ui/react";
 import Input from "@/shared/ui/Input";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
 import AuthFeedback from "../components/AuthFeedback";
 
 const ResetPassword = () => {

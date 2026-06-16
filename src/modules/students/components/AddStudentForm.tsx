@@ -16,13 +16,13 @@ const studentSchema = z.object({
   firstName: z.string().min(2, 'First name is required'),
   lastName: z.string().min(2, 'Last name is required'),
   phone: z.string().optional(),
-  gender: z.string().optional().transform(v => v === '' ? undefined : v as any),
+  gender: z.any().optional(),
   nationality: z.string().optional(),
   studentNumber: z.string().optional(),
   programId: z.string().optional(),
   nationalId: z.string().optional(),
-  scholarshipType: z.string().optional().transform(v => v === '' ? undefined : v as any),
-  status: z.string().optional().transform(v => v === '' ? undefined : v as any),
+  scholarshipType: z.any().optional(),
+  status: z.any().optional(),
   guardianName: z.string().optional(),
   guardianEmail: z.string().email('Invalid email address').optional().or(z.literal('')),
   guardianPhone: z.string().optional(),
@@ -176,7 +176,7 @@ const AddStudentForm = ({ onSuccess, onCancel }: AddStudentFormProps) => {
           <Select
             label={t("student.gender")}
             {...register('gender')}
-            error={errors.gender?.message}
+            error={errors.gender?.message as string}
             options={[
               { value: '', label: t("student.gender_enum.select") },
               { value: 'MALE', label: t("student.gender_enum.MALE") },
@@ -207,7 +207,7 @@ const AddStudentForm = ({ onSuccess, onCancel }: AddStudentFormProps) => {
           <Select
             label={t("labels.status")}
             {...register('status')}
-            error={errors.status?.message}
+            error={errors.status?.message as string}
             options={[
               { value: 'ENROLLED', label: t("student.status.ENROLLED") },
               { value: 'SUSPENDED', label: t("student.status.SUSPENDED") },
@@ -220,7 +220,7 @@ const AddStudentForm = ({ onSuccess, onCancel }: AddStudentFormProps) => {
           <Select
             label={t("student.scholarship_type")}
             {...register('scholarshipType')}
-            error={errors.scholarshipType?.message}
+            error={errors.scholarshipType?.message as string}
             options={[
               { value: 'NONE', label: t("student.scholarship.NONE") },
               { value: 'PARTIAL', label: t("student.scholarship.PARTIAL") },
@@ -326,7 +326,7 @@ const AddStudentForm = ({ onSuccess, onCancel }: AddStudentFormProps) => {
           type="submit"
           buttonType="primary"
           disabled={isSubmitting}
-          isLoading={isSubmitting}
+          loading={isSubmitting}
         >
           {t("student.add_student")}
         </Button>

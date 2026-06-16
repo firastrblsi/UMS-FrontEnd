@@ -5,10 +5,10 @@ import {
 } from "@reduxjs/toolkit";
 import { authApi } from "../api/authApi";
 import { saveUser, loadUser, clearUser } from "../services/authStorage";
-import { setAccessToken } from "../../../core/utils/token";
+import { setAccessToken } from "@/core/utils/token.ts";
 import type { AuthState } from "../types/auth";
 import type { LoginFulfilledPayload } from "./authTypes";
-import { singleFlight } from "../../../core/utils/singleFlight";
+import { singleFlight } from "@/core/utils/singleFlight.ts";
 
 // ── Initial state ─────────────────────────────────────────────────
 
@@ -61,10 +61,11 @@ export const restoreSession = createAsyncThunk(
 export const logout = createAsyncThunk("auth/logout", async () => {
   try {
     await authApi.logout();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err) {
     // Ignore network errors on logout
   } finally {
-    setAccessToken(null);
+    setAccessToken("");
     clearUser();
   }
 });
