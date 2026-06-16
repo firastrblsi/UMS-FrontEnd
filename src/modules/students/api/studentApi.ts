@@ -1,6 +1,6 @@
 import { BaseApi } from '@/core/api/baseApi';
 import { axiosInstance } from '@/core/api/axios';
-import type { StudentListResponse, StudentFilterParams, Student } from '../types/student.types';
+import type { StudentListResponse, StudentFilterParams } from '../types/student.types';
 
 export interface CreateStudentPayload {
   // User fields

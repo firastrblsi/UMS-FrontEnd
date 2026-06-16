@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { MRT_ColumnDef } from "material-react-table";
 import { Edit2, UserX, UserCheck } from "lucide-react";
@@ -38,16 +38,14 @@ interface StudentsGridProps {
   filters: StudentFilterParams;
   trigger: number;
   onEditStudent?: (student: Student) => void;
-  onDeactivateUser?: (userId: string) => void;
-  onReactivateUser?: (userId: string) => void;
+  onToggleActivation?: (userId: string, isActive: boolean) => void;
 }
 
 export const StudentsGrid = ({
   filters,
   trigger,
   onEditStudent,
-  onDeactivateUser,
-  onReactivateUser,
+  onToggleActivation,
 }: StudentsGridProps) => {
   const { t } = useTranslation();
   const { data, rowCount, isLoading, isFetching, fetchStudents } = useStudents(filters);
@@ -124,7 +122,7 @@ export const StudentsGrid = ({
       },
       {
         id: "gender",
-        accessorFn: (row) => row.user?.gender,
+        accessorFn: (row) => (row.user as any)?.gender,
         header: t("student.gender"),
         size: 100,
         muiTableHeadCellProps: { align: "center" },
@@ -195,11 +193,7 @@ export const StudentsGrid = ({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (row.original.user?.isActive) {
-                    onDeactivateUser?.(row.original.user.id);
-                  } else {
-                    onReactivateUser?.(row.original.user.id);
-                  }
+                  onToggleActivation?.(row.original.user!.id, !!row.original.user?.isActive);
                 }}
                 className={`p-2 rounded-full transition-colors ${
                   row.original.user.isActive
@@ -215,7 +209,7 @@ export const StudentsGrid = ({
         ),
       },
     ],
-    [t, onEditStudent, onDeactivateUser, onReactivateUser]
+    [t, onEditStudent, onToggleActivation]
   );
 
   return (
