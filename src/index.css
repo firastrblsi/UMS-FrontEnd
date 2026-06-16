@@ -179,3 +179,22 @@ select {
     transform: translateY(-100%);
   }
 }
+
+.active-route {
+  background-color: var(--color-primary-600);
+  color: white;
+}
+
+.collapse-button {
+  color: var(--color-neutral-400);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.collapse-button:hover {
+  color: black;
+}
+
+.primary-text {
+  color: var(--color-primary);
+}

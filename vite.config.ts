@@ -8,6 +8,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), tsconfigPaths()],
 
   resolve: {
+    dedupe: ["react", "react-dom", "react/jsx-runtime"],
     alias: {
       "@": path.resolve(__dirname, "src"),
       "@app": path.resolve(__dirname, "src/app"),
@@ -20,6 +21,12 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-    include: ["@chakra-ui/react"],
+    include: [
+      "@chakra-ui/react",
+      "@mui/material",
+      "@emotion/react",
+      "@emotion/styled",
+      "material-react-table",
+    ],
   },
 });

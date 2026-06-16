@@ -4,7 +4,7 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import { authApi } from "../api/authApi";
-import { saveUser, loadUser } from "../services/authStorage";
+import { saveUser, loadUser, clearUser } from "../services/authStorage";
 import { setAccessToken } from "../../../core/utils/token";
 import type { AuthState } from "../types/auth";
 import type { LoginFulfilledPayload } from "./authTypes";
@@ -58,6 +58,17 @@ export const restoreSession = createAsyncThunk(
   },
 );
 
+export const logout = createAsyncThunk("auth/logout", async () => {
+  try {
+    await authApi.logout();
+  } catch (err) {
+    // Ignore network errors on logout
+  } finally {
+    setAccessToken(null);
+    clearUser();
+  }
+});
+
 // ── Slice ─────────────────────────────────────────────────────────
 
 const authSlice = createSlice({
@@ -106,10 +117,15 @@ const authSlice = createSlice({
         state.isInitialized = true;
       })
       .addCase(restoreSession.rejected, (state) => {
-        state.isAuthenticated = false;
         state.user = null;
         state.isInitialized = true;
       });
+
+    // ── logout ──────────────────────────────────────────────────
+    builder.addCase(logout.fulfilled, (state) => {
+      state.isAuthenticated = false;
+      state.user = null;
+    });
   },
 });
 

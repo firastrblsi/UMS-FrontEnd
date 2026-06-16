@@ -19,6 +19,9 @@ interface InputProps extends ChakraInputProps {
   error?: string;
   required?: boolean;
   revealable?: boolean;
+  labelSize?: "sm" | "xs";
+  isFilter?: boolean;
+  errorPlaceholder?: boolean;
   showStrengthMeter?: boolean;
 }
 
@@ -41,6 +44,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       required,
       revealable,
       showStrengthMeter,
+      height = "43px",
+      borderRadius = "16px",
+      labelSize = "sm",
+      isFilter = false,
+      errorPlaceholder = true,
       onChange,
       ...rest
     },
@@ -61,7 +69,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <Field.Root invalid={!!error} required={required}>
         {label && (
           <Field.Label>
-            <span className="text-sm text-neutral-800 ms-2">{label}</span>{" "}
+            <span
+              className={`text-${labelSize} ${isFilter ? "translate-y-1 ms-1" : "ms-2"}  text-neutral-800 `}
+            >
+              {label}
+            </span>{" "}
             {required && <Field.RequiredIndicator />}{" "}
           </Field.Label>
         )}
@@ -71,8 +83,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             placeholder={placeholder}
             {...rest}
             _placeholder={{ fontSize: "sm" }}
-            height="43px"
-            borderRadius="16px"
+            height={height}
+            borderRadius={borderRadius}
             borderColor="gray.500"
             onChange={handleChange}
             _focus={{ borderColor: "gray.900" }}
@@ -86,21 +98,30 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             {...rest}
             onChange={handleChange}
             _placeholder={{ fontSize: "sm" }}
-            height="43px"
-            borderRadius="16px"
+            height={height}
+            borderRadius={borderRadius}
             borderColor="gray.500"
           />
         )}
         {showStrengthMeter && passwordValue.length > 0 && (
           <PasswordStrengthMeter value={strength} w="full" mt={1} />
         )}
-        <div className="h-8 ms-2 -translate-y-2">
-          {error && (
+        {errorPlaceholder ? (
+          <div className="h-8 ms-2 -translate-y-2">
+            {error && (
+              <div key={error} className="animate-slide-down">
+                <Field.ErrorText>{error}</Field.ErrorText>
+              </div>
+            )}
+          </div>
+        ) : (
+          error && (
             <div key={error} className="animate-slide-down">
               <Field.ErrorText>{error}</Field.ErrorText>
             </div>
-          )}
-        </div>
+          )
+        )}
+
         {hint && !error && (
           <Field.HelperText className="text-xs text-neutral-400">
             {hint}
