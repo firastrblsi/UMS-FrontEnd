@@ -98,8 +98,13 @@ const Students = () => {
         filters={filters} 
         trigger={refreshTrigger}
         onEditStudent={(student) => setEditingStudent(student)}
-        onDeactivateUser={handleDeactivate}
-        onReactivateUser={handleReactivate}
+        onToggleActivation={(userId, currentStatus) => {
+          if (currentStatus) {
+            handleDeactivate(userId);
+          } else {
+            handleReactivate(userId);
+          }
+        }}
       />
 
       <Dialog
