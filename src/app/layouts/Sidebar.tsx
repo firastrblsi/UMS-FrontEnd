@@ -9,6 +9,8 @@ import {
   ChevronRight,
   ChevronLeft,
   Landmark,
+  BookOpen,
+  Building,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAppDispatch } from "@/core/hooks/useAppDispatch";
@@ -18,6 +20,7 @@ import { toggleSidebar } from "@/core/store/slices/uiSlice";
 import { useTranslation } from "react-i18next";
 import type { Role } from "@/modules/auth/types/auth";
 import { selectUser } from "@/modules/auth/redux/authSelectors";
+import { logout } from "@/modules/auth/redux/authSlice";
 
 interface NavItem {
   to: string;
@@ -49,6 +52,18 @@ const NAV_ITEMS: NavItem[] = [
     to: "/departments",
     icon: Landmark,
     labelKey: "routes.departments",
+    roles: ["ADMIN"],
+  },
+  {
+    to: "/programs",
+    icon: BookOpen,
+    labelKey: "routes.programs", // Ensure t("routes.programs") or fallback works
+    roles: ["ADMIN"],
+  },
+  {
+    to: "/rooms",
+    icon: Building,
+    labelKey: "routes.rooms", // Ensure t("routes.rooms") or fallback works
     roles: ["ADMIN"],
   },
 ];
@@ -133,6 +148,7 @@ const Sidebar = () => {
           </li>
           <li className="flex justify-center gap-2 items-center w-full">
             <span
+              onClick={() => dispatch(logout())}
               className={`flex items-center cursor-pointer  ${isCollapsed ? "w-10 rounded-full justify-center" : "w-[90%] rounded-lg ps-5"} h-10   transition-colors text-black bg-gray-100 hover:bg-gray-200`}
             >
               <LogOut size={15} />

@@ -3,19 +3,11 @@ export type HighestDegree = 'PHD' | 'MASTER' | 'BACHELOR' | 'OTHER';
 export type ContractType = 'PERMANENT' | 'CONTRACT' | 'PART_TIME' | 'VISITING';
 
 export interface Teacher {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phone: string | null;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  // Profile fields
+  id: string; // TeacherProfile ID
+  userId: string;
   employeeId: string | null;
   title: TeacherTitle | null;
   departmentId: string | null;
-  departmentName: string | null;
   specialization: string | null;
   highestDegree: HighestDegree | null;
   degreeField: string | null;
@@ -27,6 +19,23 @@ export interface Teacher {
   officeHours: string | null;
   professionalEmail: string | null;
   bio: string | null;
+  createdAt: string;
+  updatedAt: string;
+  
+  // Relations
+  user?: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone: string | null;
+    isActive: boolean;
+  };
+  department?: {
+    id: string;
+    name: string;
+    code: string;
+  };
 }
 
 export interface TeacherListResponse {

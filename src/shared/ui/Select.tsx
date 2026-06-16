@@ -6,16 +6,15 @@ export interface SelectOption {
   label: string;
 }
 
-export interface SelectProps {
+export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   labelSize?: "sm" | "xs";
   isFilter?: boolean;
   placeholder?: string;
   options: SelectOption[];
-  value?: string;
   height?: string;
   borderRadius?: string;
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  error?: string;
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
@@ -30,13 +29,15 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       onChange,
       height = "43px",
       borderRadius = "16px",
+      error,
+      ...rest
     },
     ref,
   ) => {
     const hasValue = value !== undefined && value !== "";
 
     return (
-      <Field.Root>
+      <Field.Root invalid={!!error}>
         {label && (
           <Field.Label>
             <span
@@ -55,6 +56,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             value={value}
             onChange={onChange}
+            {...rest}
             style={{
               height,
               borderRadius,
@@ -99,6 +101,12 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             }}
           />
         </NativeSelect.Root>
+        
+        {error && (
+          <div key={error} className="animate-slide-down ms-2 mt-1">
+            <Field.ErrorText>{error}</Field.ErrorText>
+          </div>
+        )}
       </Field.Root>
     );
   },

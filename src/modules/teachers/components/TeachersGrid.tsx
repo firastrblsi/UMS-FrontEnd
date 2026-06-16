@@ -113,7 +113,7 @@ export function TeachersGrid({ externalFilters }: TeachersGridProps) {
         id: "name",
         header: t("labels.name"),
         minSize: 160,
-        accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+        accessorFn: (row) => `${row.user?.firstName || ""} ${row.user?.lastName || ""}`,
         muiTableHeadCellProps: { align: "center" },
         muiTableBodyCellProps: { align: "center" },
         Cell: ({ row, cell }) => (
@@ -140,13 +140,14 @@ export function TeachersGrid({ externalFilters }: TeachersGridProps) {
         ),
       },
       {
-        accessorKey: "departmentName",
+        id: "departmentName",
+        accessorFn: (row) => row.department?.name,
         header: t("labels.department"),
         minSize: 140,
         muiTableHeadCellProps: { align: "center" },
         muiTableBodyCellProps: { align: "center" },
         Cell: ({ cell }) => {
-          const val = cell.getValue<string | null>();
+          const val = cell.getValue<string | null | undefined>();
           return val ? (
             <span
               style={{ fontSize: "12px", color: "#1E293B", fontWeight: 500 }}
@@ -159,7 +160,8 @@ export function TeachersGrid({ externalFilters }: TeachersGridProps) {
         },
       },
       {
-        accessorKey: "email",
+        id: "email",
+        accessorFn: (row) => row.user?.email,
         header: t("labels.email"),
         minSize: 200,
         muiTableHeadCellProps: { align: "center" },
@@ -228,12 +230,13 @@ export function TeachersGrid({ externalFilters }: TeachersGridProps) {
         },
       },
       {
-        accessorKey: "isActive",
+        id: "isActive",
+        accessorFn: (row) => row.user?.isActive,
         header: t("labels.status"),
         size: 100,
         muiTableHeadCellProps: { align: "center" },
         muiTableBodyCellProps: { align: "center" },
-        Cell: ({ cell }) => <StatusBadge isActive={cell.getValue<boolean>()} />,
+        Cell: ({ cell }) => <StatusBadge isActive={!!cell.getValue<boolean | undefined>()} />,
       },
       {
         accessorKey: "createdAt",

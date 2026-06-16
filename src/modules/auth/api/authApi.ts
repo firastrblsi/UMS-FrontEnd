@@ -16,11 +16,19 @@ export const authApi = {
       .then((r) => r.data);
   },
 
+  logout(): Promise<void> {
+    return axiosInstance.post(`${BASE}/logout`);
+  },
+
   forgotPassword(email: string): Promise<void> {
     return axiosInstance.post(`${BASE}/forgot-password`, { email });
   },
 
   resetPassword(token: string, newPassword: string): Promise<void> {
     return axiosInstance.post(`${BASE}/reset-password`, { token, newPassword });
+  },
+
+  activateAccount(token: string, password: string): Promise<void> {
+    return axiosInstance.post(`${BASE}/activate`, { token, password });
   },
 };

@@ -33,8 +33,10 @@ export interface DataTableProps<TData extends Record<string, any>> {
   enableGlobalFilter?: boolean;
   enableColumnFilters?: boolean;
   enableTopToolbar?: boolean;
+  enableTopToolbar?: boolean;
   enableHiding?: boolean;
   initialState?: MRT_TableOptions<TData>["initialState"];
+  refetchTrigger?: number;
 }
 
 // ─── MUI theme matching the app design ───────────────────────────────────────
@@ -223,6 +225,7 @@ export function DataTable<TData extends Record<string, any>>({
   enableTopToolbar = true,
   enableHiding = false,
   initialState,
+  refetchTrigger = 0,
 }: DataTableProps<TData>) {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
@@ -252,7 +255,7 @@ export function DataTable<TData extends Record<string, any>>({
     return () => clearTimeout(timer);
   }, [globalFilter]);
 
-  // Trigger fetch whenever any server-side param changes
+  // Trigger fetch whenever any server-side param or external trigger changes
   useEffect(() => {
     onFetchDataRef.current?.({
       page: pagination.pageIndex,
@@ -261,7 +264,7 @@ export function DataTable<TData extends Record<string, any>>({
       globalFilter: debouncedGlobalFilter,
       columnFilters,
     });
-  }, [pagination, sorting, debouncedGlobalFilter, columnFilters]);
+  }, [pagination, sorting, debouncedGlobalFilter, columnFilters, refetchTrigger]);
 
   const table = useMaterialReactTable<TData>({
     columns,

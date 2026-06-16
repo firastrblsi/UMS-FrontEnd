@@ -6,16 +6,13 @@ import type { Department } from "../types/department.types";
 
 // ─── Status badge ─────────────────────────────────────────────────────────────
 
-const STATUS_STYLES: Record<
-  Department["status"],
-  { bg: string; color: string; label: string }
-> = {
+const STATUS_STYLES = {
   active: { bg: "#F0FDF4", color: "#15803D", label: "Active" },
   inactive: { bg: "#FFF1F2", color: "#BE123C", label: "Inactive" },
 };
 
-function StatusBadge({ status }: { status: Department["status"] }) {
-  const { bg, color, label } = STATUS_STYLES[status];
+function StatusBadge({ isActive }: { isActive: boolean }) {
+  const { bg, color, label } = isActive ? STATUS_STYLES.active : STATUS_STYLES.inactive;
   return (
     <span
       style={{
@@ -72,44 +69,25 @@ const columns: MRT_ColumnDef<Department>[] = [
     ),
   },
   {
-    accessorKey: "chief",
-    header: "Department Chief",
-    size: 180,
-    muiTableHeadCellProps: { align: "center" },
-    muiTableBodyCellProps: { align: "center" },
-  },
-  {
-    accessorKey: "studentsCount",
-    header: "Students",
-    size: 100,
-    muiTableHeadCellProps: { align: "center" },
-    muiTableBodyCellProps: { align: "center" },
+    accessorKey: "description",
+    header: "Description",
+    size: 200,
+    muiTableHeadCellProps: { align: "left" },
+    muiTableBodyCellProps: { align: "left" },
     Cell: ({ cell }) => (
-      <span style={{ fontWeight: 500 }}>
-        {cell.getValue<number>().toLocaleString()}
+      <span style={{ color: "#64748b", fontSize: "13px" }}>
+        {cell.getValue<string>() || "-"}
       </span>
     ),
   },
   {
-    accessorKey: "teachersCount",
-    header: "Teachers",
-    size: 100,
-    muiTableHeadCellProps: { align: "right" },
-    muiTableBodyCellProps: { align: "right" },
-    Cell: ({ cell }) => (
-      <span style={{ fontWeight: 500 }}>
-        {cell.getValue<number>().toLocaleString()}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "status",
+    accessorKey: "isActive",
     header: "Status",
     size: 110,
     muiTableHeadCellProps: { align: "center" },
     muiTableBodyCellProps: { align: "center" },
     Cell: ({ cell }) => (
-      <StatusBadge status={cell.getValue<Department["status"]>()} />
+      <StatusBadge isActive={cell.getValue<boolean>()} />
     ),
   },
   {

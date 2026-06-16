@@ -19,7 +19,7 @@ function mockFetch(params: FetchDataParams): Promise<{ data: Department[]; total
           (d) =>
             d.name.toLowerCase().includes(q) ||
             d.code.toLowerCase().includes(q) ||
-            d.chief.toLowerCase().includes(q),
+            (d.description && d.description.toLowerCase().includes(q)),
         );
       }
 

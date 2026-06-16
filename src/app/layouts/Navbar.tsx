@@ -1,10 +1,11 @@
-import { useTranslation, Trans } from "react-i18next";
 import { Bell } from "lucide-react";
 import { Avatar } from "@chakra-ui/react";
 import { useAppSelector } from "@/core/hooks/useAppSelector";
 import { selectDashboardPage } from "@/core/store/selectors/uiSelectors";
+import { selectUser } from "@/modules/auth/redux/authSelectors";
 import type { ReactNode } from "react";
 import dashboardBg from "../../assets/dashboard-bg.jpg";
+import { Trans } from "react-i18next";
 
 interface NavbarProps {
   children?: ReactNode;
@@ -12,8 +13,14 @@ interface NavbarProps {
 
 const Navbar = ({ children }: NavbarProps) => {
   const isDashboardPage = useAppSelector(selectDashboardPage);
+  const user = useAppSelector(selectUser);
 
-  const { t } = useTranslation();
+  const getAvatarUrl = () => {
+    if (!user?.profilePicture?.url) return "";
+    if (user.profilePicture.url.startsWith("http")) return user.profilePicture.url;
+    return `${import.meta.env.VITE_API_URL || "http://localhost:3000"}${user.profilePicture.url}`;
+  };
+
   return (
     <div
       className={`${isDashboardPage ? "h-85 text-white justify-between py-3" : "border h-15 justify-center"} w-full rounded-2xl bg-white flex flex-col px-7 transition-all duration-500 ease-in-out `}
@@ -49,8 +56,8 @@ const Navbar = ({ children }: NavbarProps) => {
           </div>
           <div className="cursor-pointer">
             <Avatar.Root className="w-10 h-10">
-              <Avatar.Fallback name="Segun Adebayo" />
-              <Avatar.Image src="https://bit.ly/sage-adebayo" />
+              <Avatar.Fallback name={user ? `${user.firstName} ${user.lastName}` : "User"} />
+              <Avatar.Image src={getAvatarUrl()} />
             </Avatar.Root>
           </div>
         </div>

@@ -1,0 +1,48 @@
+import { useState, useCallback, useRef } from 'react';
+import type { FetchDataParams } from '@/shared/ui/DataTable';
+import type { Program } from '../types/university.types';
+import type { ProgramFilterParams } from '../api/programApi';
+import { programApi } from '../api/programApi';
+
+export function usePrograms(externalFilters: ProgramFilterParams) {
+  const [data, setData] = useState<Program[]>([]);
+  const [rowCount, setRowCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
+  const isFirstFetch = useRef(true);
+
+  const filtersRef = useRef(externalFilters);
+  filtersRef.current = externalFilters;
+
+  const fetchPrograms = useCallback(async (params: FetchDataParams) => {
+    if (isFirstFetch.current) {
+      setIsLoading(true);
+    } else {
+      setIsFetching(true);
+    }
+
+    try {
+      const search = params.globalFilter?.trim();
+      const result = await programApi.getPrograms({
+        skip: params.page * params.pageSize,
+        take: params.pageSize,
+        ...(search ? { search } : {}),
+        ...filtersRef.current,
+        ...(params.sorting[0]
+          ? { sort: params.sorting[0].id, order: params.sorting[0].desc ? 'desc' : 'asc' }
+          : {}),
+      });
+      setData(result.data);
+      setRowCount(result.total);
+    } catch {
+      setData([]);
+      setRowCount(0);
+    } finally {
+      isFirstFetch.current = false;
+      setIsLoading(false);
+      setIsFetching(false);
+    }
+  }, []);
+
+  return { data, rowCount, isLoading, isFetching, fetchPrograms };
+}

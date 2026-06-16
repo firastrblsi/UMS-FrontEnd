@@ -25,8 +25,8 @@ const DepartmentsFilterForm = () => {
         ></Input>
         <Input
           height="30px"
-          label={t("labels.dep_chief")}
-          placeholder={t("labels.dep_chief")}
+          label={t("labels.description", "Description")}
+          placeholder={t("labels.description", "Description")}
           borderRadius="7px"
           labelSize="xs"
           isFilter

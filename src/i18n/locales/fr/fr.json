@@ -17,7 +17,15 @@
     "password_changed_description": "Vous pouvez maintenant utiliser votre nouveau mot de passe pour vous connecter.",
     "invalid_reset_link": "Lien de réinitialisation invalide ou expiré.",
     "invalid_reset_link_description": "Le lien de réinitialisation est invalide ou a expiré. Veuillez demander une nouvelle réinitialisation de mot de passe.",
-    "request_new_reset_link": "Demander un nouveau lien de réinitialisation"
+    "invalid_reset_link_description": "Le lien de réinitialisation est invalide ou a expiré. Veuillez demander une nouvelle réinitialisation de mot de passe.",
+    "request_new_reset_link": "Demander un nouveau lien de réinitialisation",
+    "invalid_activation_link": "Lien d'activation invalide",
+    "invalid_activation_link_description": "Le lien d'activation que vous avez fourni est manquant ou invalide. Veuillez vérifier votre e-mail ou contacter l'administration.",
+    "account_activated": "Compte activé !",
+    "account_activated_description": "Votre compte a été activé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+    "activate_account": "Activez votre compte",
+    "activate_account_subheader": "Bienvenue dans le système de gestion universitaire ! Veuillez définir votre mot de passe pour activer votre compte.",
+    "activate_button": "Activer le compte"
   },
   "labels": {
     "email": "Email",
@@ -38,7 +46,10 @@
     "degree": "Diplôme",
     "contract": "Contrat",
     "title": "Titre",
-    "department": "Département"
+    "title": "Titre",
+    "department": "Département",
+    "deactivate_account": "Désactiver le compte",
+    "reactivate_account": "Réactiver le compte"
   },
   "teacher": {
     "title": {
@@ -61,6 +72,67 @@
       "OTHER": "Autre"
     }
   },
+  "student": {
+    "add_student": "Ajouter un étudiant",
+    "add_new_student": "Ajouter un nouvel étudiant",
+    "edit_student": "Modifier l'étudiant",
+    "student_id": "Matricule étudiant",
+    "first_name": "Prénom",
+    "last_name": "Nom de famille",
+    "phone": "Téléphone",
+    "gender": "Genre",
+    "nationality": "Nationalité",
+    "national_id": "CIN / Passeport",
+    "program": "Programme",
+    "class_group": "Groupe de classe",
+    "scholarship_type": "Type de bourse",
+    "enrollment_date": "Date d'inscription",
+    "baccalaureate_field": "Filière du baccalauréat",
+    "baccalaureate_grade": "Moyenne du baccalauréat",
+    "baccalaureate_year": "Année du baccalauréat",
+    "current_year_number": "Année d'étude actuelle",
+    "medical_needs": "Besoins médicaux",
+    "has_medical_needs": "A des besoins médicaux",
+    "medical_notes": "Notes médicales",
+    "emergency_contact": "Contact d'urgence",
+    "guardian_name": "Nom du tuteur",
+    "guardian_email": "Email du tuteur",
+    "guardian_phone": "Téléphone du tuteur",
+    "guardian_relation": "Relation du tuteur",
+    "previous_institution": "Institution précédente",
+    "transport_mode": "Mode de transport",
+    "account_deactivated": "Compte désactivé avec succès",
+    "account_reactivated": "Compte réactivé avec succès",
+    "failed_deactivate": "Échec de la désactivation du compte",
+    "failed_reactivate": "Échec de la réactivation du compte",
+    "actions": "Actions",
+    "yes": "Oui",
+    "no": "Non",
+    "save_changes": "Enregistrer",
+    "cancel": "Annuler",
+    "search_placeholder": "Rechercher par nom, email ou matricule...",
+    "all_statuses": "Tous les statuts",
+    "all_scholarships": "Toutes les bourses",
+    "status": {
+      "ENROLLED": "Inscrit",
+      "SUSPENDED": "Suspendu",
+      "GRADUATED": "Diplômé",
+      "WITHDRAWN": "Retiré",
+      "DEFERRED": "Différé"
+    },
+    "scholarship": {
+      "NONE": "Aucune",
+      "PARTIAL": "Partielle",
+      "FULL": "Complète",
+      "MERIT": "Mérite"
+    },
+    "gender_enum": {
+      "MALE": "Masculin",
+      "FEMALE": "Féminin",
+      "OTHER": "Autre",
+      "select": "Sélectionner le genre"
+    }
+  },
   "routes": {
     "dashboard": "Tableau de bord",
     "students": "Étudiants",
@@ -68,7 +140,9 @@
     "attendance": "Présences",
     "settings": "Paramètres",
     "logout": "Déconnexion",
-    "departments": "Départements"
+    "departments": "Départements",
+    "programs": "Programmes",
+    "rooms": "Salles"
   },
   "global": {
     "sesame": "Université <highlight>SESAME</highlight>",

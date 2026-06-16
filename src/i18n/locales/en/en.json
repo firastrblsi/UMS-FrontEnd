@@ -16,7 +16,15 @@
     "password_changed_description": "You can now use your new password to sign in.",
     "invalid_reset_link": "Invalid or expired reset link.",
     "invalid_reset_link_description": "The reset link is invalid or has expired. Please request a new password reset.",
-    "request_new_reset_link": "Request a new reset link"
+    "invalid_reset_link_description": "The reset link is invalid or has expired. Please request a new password reset.",
+    "request_new_reset_link": "Request a new reset link",
+    "invalid_activation_link": "Invalid Activation Link",
+    "invalid_activation_link_description": "The activation link you provided is missing or invalid. Please check your email or contact administration.",
+    "account_activated": "Account Activated!",
+    "account_activated_description": "Your account has been successfully activated. You can now log in with your new password.",
+    "activate_account": "Activate Your Account",
+    "activate_account_subheader": "Welcome to the University Management System! Please set your password to activate your account.",
+    "activate_button": "Activate Account"
   },
   "labels": {
     "email": "Email",
@@ -37,7 +45,10 @@
     "degree": "Degree",
     "contract": "Contract",
     "title": "Title",
-    "department": "Department"
+    "title": "Title",
+    "department": "Department",
+    "deactivate_account": "Deactivate Account",
+    "reactivate_account": "Reactivate Account"
   },
   "teacher": {
     "title": {
@@ -60,6 +71,67 @@
       "OTHER": "Other"
     }
   },
+  "student": {
+    "add_student": "Add Student",
+    "add_new_student": "Add New Student",
+    "edit_student": "Edit Student",
+    "student_id": "Student ID",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "phone": "Phone",
+    "gender": "Gender",
+    "nationality": "Nationality",
+    "national_id": "National ID",
+    "program": "Program",
+    "class_group": "Class Group",
+    "scholarship_type": "Scholarship Type",
+    "enrollment_date": "Enrollment Date",
+    "baccalaureate_field": "Baccalaureate Field",
+    "baccalaureate_grade": "Baccalaureate Grade",
+    "baccalaureate_year": "Baccalaureate Year",
+    "current_year_number": "Current Year Number",
+    "medical_needs": "Medical Needs",
+    "has_medical_needs": "Has Medical Needs",
+    "medical_notes": "Medical Notes",
+    "emergency_contact": "Emergency Contact",
+    "guardian_name": "Guardian Name",
+    "guardian_email": "Guardian Email",
+    "guardian_phone": "Guardian Phone",
+    "guardian_relation": "Guardian Relation",
+    "previous_institution": "Previous Institution",
+    "transport_mode": "Transport Mode",
+    "account_deactivated": "Account deactivated successfully",
+    "account_reactivated": "Account reactivated successfully",
+    "failed_deactivate": "Failed to deactivate account",
+    "failed_reactivate": "Failed to reactivate account",
+    "actions": "Actions",
+    "yes": "Yes",
+    "no": "No",
+    "save_changes": "Save Changes",
+    "cancel": "Cancel",
+    "search_placeholder": "Search by name, email or ID...",
+    "all_statuses": "All Statuses",
+    "all_scholarships": "All Scholarships",
+    "status": {
+      "ENROLLED": "Enrolled",
+      "SUSPENDED": "Suspended",
+      "GRADUATED": "Graduated",
+      "WITHDRAWN": "Withdrawn",
+      "DEFERRED": "Deferred"
+    },
+    "scholarship": {
+      "NONE": "None",
+      "PARTIAL": "Partial",
+      "FULL": "Full",
+      "MERIT": "Merit"
+    },
+    "gender_enum": {
+      "MALE": "Male",
+      "FEMALE": "Female",
+      "OTHER": "Other",
+      "select": "Select Gender"
+    }
+  },
   "routes": {
     "dashboard": "Dashboard",
     "students": "Students",
@@ -67,7 +139,9 @@
     "attendance": "Attendance",
     "settings": "Settings",
     "logout": "Logout",
-    "departments": "Departments"
+    "departments": "Departments",
+    "programs": "Programs",
+    "rooms": "Rooms"
   },
   "global": {
     "sesame": "<highlight>SESAME</highlight> University",
