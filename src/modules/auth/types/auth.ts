@@ -5,8 +5,17 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
+  phone: string | null;
   role: Role;
+  gender: 'MALE' | 'FEMALE' | 'OTHER' | null;
+  nationality: string | null;
   isActive: boolean;
+  profilePictureId: string | null;
+  profilePicture?: {
+    id: string;
+    url: string;
+    publicId: string;
+  } | null;
   createdAt: Date;
   updatedAt: Date;
 }

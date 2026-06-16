@@ -18,6 +18,9 @@ interface ButtonProps extends Omit<
 > {
   variant?: ButtonVariant;
   loading?: boolean;
+  buttonType?: "primary" | "secondary";
+  height?: number;
+  radius?: number;
 }
 
 const VARIANT_MAP: Record<
@@ -74,18 +77,43 @@ const VARIANT_MAP: Record<
   },
 };
 
+const SECONDARY_CSS: React.CSSProperties = {
+  background: "transparent",
+  borderColor: "#004371",
+  borderWidth: "2px",
+  color: "#004371",
+};
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "solid", loading, children, style, ...rest }, ref) => {
+  (
+    {
+      variant = "solid",
+      loading,
+      children,
+      style,
+      buttonType,
+      height = 42,
+      radius = 15,
+      ...rest
+    },
+    ref,
+  ) => {
     const { chakraVariant, css: variantCss } = VARIANT_MAP[variant];
+
+    const resolvedCss =
+      buttonType === "secondary"
+        ? { ...variantCss, ...SECONDARY_CSS }
+        : variantCss;
 
     return (
       <ChakraButton
         ref={ref}
         variant={chakraVariant}
         loading={loading}
-        style={{ ...variantCss, ...style }}
+        style={{ ...resolvedCss, ...style }}
         {...rest}
-        borderRadius="16px"
+        borderRadius={radius + "px"}
+        height={height + "px"}
       >
         {children}
       </ChakraButton>

@@ -5,6 +5,8 @@ export const AUTH_ENDPOINTS = {
   LOGOUT: "/auth/logout",
   REFRESH: "/auth/refresh",
   PROFILE: "/auth/profile",
+  FORGOT_PASSWORD: "/auth/forgot-password",
+  RESET_PASSWORD: "/auth/reset-password",
 };
 
 // User endpoints
@@ -32,4 +34,19 @@ export const CLASS_ENDPOINTS = {
   CREATE: "/classes",
   UPDATE: (id: string) => `/classes/${id}`,
   DELETE: (id: string) => `/classes/${id}`,
+};
+
+// Teacher endpoints
+export const TEACHER_ENDPOINTS = {
+  BASE: "/teachers",
+};
+
+// Department endpoints
+export const DEPARTMENT_ENDPOINTS = {
+  BASE: "/departments",
+  GET_ALL: "/departments",
+  GET_BY_ID: (id: string) => `/departments/${id}`,
+  CREATE: "/departments",
+  UPDATE: (id: string) => `/departments/${id}`,
+  DELETE: (id: string) => `/departments/${id}`,
 };

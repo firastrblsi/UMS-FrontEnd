@@ -3,6 +3,9 @@ import Login from "../pages/Login";
 import { useAppSelector } from "../../../core/hooks/useAppSelector";
 import { selectIsAuthenticated, selectUser } from "../redux/authSelectors";
 import type { Role } from "../types/auth";
+import ResetPassword from "../pages/ResetPassword";
+import ForgotPassword from "../pages/ForgotPassword";
+import AuthLayout from "@/app/layouts/AuthLayout";
 
 function NoAuthGuard({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
@@ -24,12 +27,15 @@ export const authRoutes = (
   <Route path="auth">
     <Route index element={<Navigate to="login" replace />} />
     <Route
-      path="login"
       element={
         <NoAuthGuard>
-          <Login />
+          <AuthLayout />
         </NoAuthGuard>
       }
-    />
+    >
+      <Route path="login" element={<Login />} />
+      <Route path="forgot-password" element={<ForgotPassword />} />
+      <Route path="reset-password" element={<ResetPassword />} />
+    </Route>
   </Route>
 );

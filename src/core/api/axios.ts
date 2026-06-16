@@ -8,6 +8,7 @@ import {
   setAccessToken,
   clearAccessToken,
 } from "../utils/token";
+import i18n from "@/i18n";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
@@ -25,8 +26,10 @@ export const axiosInstance: AxiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = getAccessToken();
+    const language = i18n.language?.split("-")[0] ?? "en";
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
+      config.headers["Accept-Language"] = language;
     }
     return config;
   },
