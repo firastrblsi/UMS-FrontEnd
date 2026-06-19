@@ -6,6 +6,7 @@ import { selectUser } from "@/modules/auth/redux/authSelectors";
 import type { ReactNode } from "react";
 import dashboardBg from "../../assets/dashboard-bg.jpg";
 import { Trans } from "react-i18next";
+import LanguageSelector from "./LanguageSelector";
 
 interface NavbarProps {
   children?: ReactNode;
@@ -16,7 +17,7 @@ const Navbar = ({ children }: NavbarProps) => {
   const user = useAppSelector(selectUser);
 
   const getAvatarUrl = () => {
-    if (!user?.profilePicture?.url) return "";
+    if (!user?.profilePicture?.url) return undefined;
     if (user.profilePicture.url.startsWith("http")) return user.profilePicture.url;
     return `${import.meta.env.VITE_API_URL || "http://localhost:3000"}${user.profilePicture.url}`;
   };
@@ -50,7 +51,10 @@ const Navbar = ({ children }: NavbarProps) => {
             />
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          <div className="z-50">
+            <LanguageSelector />
+          </div>
           <div className="flex items-center justify-center rounded-full w-10 h-10 text-black bg-gray-100 hover:bg-gray-200 cursor-pointer">
             <Bell size={15} />
           </div>

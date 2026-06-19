@@ -1,32 +1,88 @@
 import { useState } from "react";
-import RoomsFilterForm from "../components/RoomsFilterForm";
 import { RoomsGrid } from "../components/RoomsGrid";
-import type { RoomFilterParams } from "../api/roomApi";
+import { Button } from "@/shared/ui/Button";
+import { Plus, RefreshCw } from "lucide-react";
+import { Dialog } from "@/shared/ui/Dialog";
+import AddRoomForm from "../components/AddRoomForm";
+import UpdateRoomForm from "../components/UpdateRoomForm";
+import type { Room } from "../types/university.types";
+import { useTranslation } from "react-i18next";
 
 const Rooms = () => {
-  const [filters, setFilters] = useState<RoomFilterParams>({});
+
+  const [showAddRoom, setShowAddRoom] = useState(false);
+  const [editingRoom, setEditingRoom] = useState<Room | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const { t } = useTranslation();
+
+  const handleRefresh = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
 
   return (
-    <div className="flex flex-col gap-6 h-full p-2 lg:p-6 w-full max-w-[1400px] mx-auto animate-fade-in">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800 tracking-tight">
-            Rooms
-          </h1>
-          <p className="text-slate-500 mt-1">Manage university classrooms and facilities</p>
+    <div className="flex flex-col gap-10 md:gap-15">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center">
+        <h1 className="text-2xl mb-3 md:mb-0">{t("routes.rooms")}</h1>
+        
+        <div className="flex gap-2 justify-center">
+          <Button
+            buttonType="secondary"
+            height={30}
+            radius={10}
+            className="flex items-center justify-center p-2"
+            onClick={handleRefresh}
+            title="Refresh List"
+          >
+            <RefreshCw size={16} />
+          </Button>
+
+          <Button height={30} radius={10} className="flex gap-3" onClick={() => setShowAddRoom(true)}>
+            <span className="font-light">{t("global.add_room")}</span>
+            <Plus />
+          </Button>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-        <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-          Filters
-        </h2>
-        <RoomsFilterForm onFilter={setFilters} />
-      </div>
+      <Dialog
+        open={showAddRoom}
+        onClose={() => setShowAddRoom(false)}
+        title={t("global.add_room")}
+        size="md"
+      >
+        <AddRoomForm 
+          onSuccess={() => {
+            setShowAddRoom(false);
+            handleRefresh();
+          }}
+          onCancel={() => setShowAddRoom(false)}
+        />
+      </Dialog>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-1 min-h-[400px]">
-        <RoomsGrid externalFilters={filters} />
-      </div>
+
+
+      <RoomsGrid 
+        trigger={refreshTrigger}
+        onEditRoom={(room) => setEditingRoom(room)}
+      />
+
+      <Dialog
+        open={!!editingRoom}
+        onClose={() => setEditingRoom(null)}
+        title={t("global.update_room")}
+        size="md"
+      >
+        {editingRoom && (
+          <UpdateRoomForm 
+            room={editingRoom}
+            onSuccess={() => {
+              setEditingRoom(null);
+              handleRefresh();
+            }}
+            onCancel={() => setEditingRoom(null)}
+          />
+        )}
+      </Dialog>
     </div>
   );
 };

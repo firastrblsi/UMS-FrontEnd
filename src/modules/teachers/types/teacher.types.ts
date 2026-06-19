@@ -30,6 +30,9 @@ export interface Teacher {
     lastName: string;
     phone: string | null;
     isActive: boolean;
+    gender?: "MALE" | "FEMALE";
+    nationality?: string | null;
+    profilePicture?: { url: string } | null;
   };
   department?: {
     id: string;
@@ -54,6 +57,7 @@ export interface TeacherListParams {
   specialization?: string;
   sort?: string;
   order?: 'asc' | 'desc';
+  filters?: string;
 }
 
 export interface TeacherFilterParams {

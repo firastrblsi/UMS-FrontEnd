@@ -1,10 +1,14 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { MRT_ColumnDef } from "material-react-table";
 import { DataTable } from "@/shared/ui/DataTable";
+import { DateColumnFilter } from "@/shared/ui/DateColumnFilter";
 import { usePrograms } from "../hooks/usePrograms";
 import type { Program } from "../types/university.types";
 import type { ProgramFilterParams } from "../api/programApi";
+import { Edit2, Trash2, Ban, CheckCircle } from "lucide-react";
+import { programApi } from "../api/programApi";
+import { toaster } from "@/components/ui/toaster";
 
 function StatusBadge({ isActive }: { isActive: boolean }) {
   const { t } = useTranslation();
@@ -27,18 +31,66 @@ function StatusBadge({ isActive }: { isActive: boolean }) {
 }
 
 interface ProgramsGridProps {
-  externalFilters: ProgramFilterParams;
+  externalFilters?: ProgramFilterParams;
+  trigger?: number;
+  onEditProgram?: (program: Program) => void;
 }
 
-export function ProgramsGrid({ externalFilters }: ProgramsGridProps) {
+export function ProgramsGrid({ externalFilters, trigger, onEditProgram }: ProgramsGridProps) {
   const { t } = useTranslation();
-  const { data, rowCount, isLoading, isFetching, fetchPrograms } = usePrograms(externalFilters);
+  const { data, rowCount, isLoading, isFetching, fetchPrograms } = usePrograms(externalFilters || {});
+
+  useEffect(() => {
+    if (trigger && trigger > 0) {
+      fetchPrograms({
+        page: 0,
+        pageSize: 10,
+        sorting: [],
+        columnFilters: [],
+        globalFilter: "",
+      });
+    }
+  }, [trigger, fetchPrograms]);
+
+  const handleToggleActivation = async (program: Program) => {
+    try {
+      await programApi.updateProgram(program.id, { isActive: !program.isActive });
+      toaster.create({ title: t("global.updated", "Updated"), type: "success" });
+      fetchPrograms({
+        page: 0,
+        pageSize: 10,
+        sorting: [],
+        columnFilters: [],
+        globalFilter: "",
+      });
+    } catch (err) {
+      toaster.create({ title: t("global.update_failed", "Failed to update"), type: "error" });
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (window.confirm(t("global.confirm_delete", "Are you sure you want to delete this?"))) {
+      try {
+        await programApi.deleteProgram(id);
+        toaster.create({ title: t("global.deleted", "Deleted"), type: "success" });
+        fetchPrograms({
+          page: 0,
+          pageSize: 10,
+          sorting: [],
+          columnFilters: [],
+          globalFilter: "",
+        });
+      } catch (err) {
+        toaster.create({ title: t("global.delete_failed", "Failed to delete"), type: "error" });
+      }
+    }
+  };
 
   const columns = useMemo<MRT_ColumnDef<Program>[]>(
     () => [
       {
         accessorKey: "code",
-        header: "Code",
+        header: t("global.code", "Code"),
         size: 90,
         muiTableHeadCellProps: { align: "center" },
         muiTableBodyCellProps: { align: "center" },
@@ -60,7 +112,7 @@ export function ProgramsGrid({ externalFilters }: ProgramsGridProps) {
       },
       {
         accessorKey: "name",
-        header: t("labels.name"),
+        header: t("labels.program_name", "Program Name"),
         minSize: 200,
         muiTableHeadCellProps: { align: "left" },
         muiTableBodyCellProps: { align: "left" },
@@ -72,8 +124,28 @@ export function ProgramsGrid({ externalFilters }: ProgramsGridProps) {
       },
       {
         accessorKey: "degreeType",
-        header: "Degree Type",
+        header: t("labels.degree_type", "Degree Type"),
         size: 140,
+        filterVariant: 'select',
+        filterSelectOptions: [
+          { value: 'BACHELOR', label: 'BACHELOR' },
+          { value: 'MASTER', label: 'MASTER' },
+          { value: 'PHD', label: 'PHD' },
+        ],
+        muiTableHeadCellProps: { align: "center" },
+        muiTableBodyCellProps: { align: "center" },
+      },
+      {
+        accessorKey: "totalCredits",
+        header: t("labels.total_credits", "Total Credits"),
+        size: 110,
+        muiTableHeadCellProps: { align: "center" },
+        muiTableBodyCellProps: { align: "center" },
+      },
+      {
+        accessorKey: "numberOfSemesters",
+        header: t("labels.number_of_semesters", "Semesters"),
+        size: 110,
         muiTableHeadCellProps: { align: "center" },
         muiTableBodyCellProps: { align: "center" },
       },
@@ -81,21 +153,72 @@ export function ProgramsGrid({ externalFilters }: ProgramsGridProps) {
         accessorKey: "isActive",
         header: t("labels.status", "Status"),
         size: 110,
+        filterVariant: 'select',
+        filterSelectOptions: [
+          { value: 'true', label: t('labels.active', 'Active') },
+          { value: 'false', label: t('labels.inactive', 'Inactive') },
+        ],
         muiTableHeadCellProps: { align: "center" },
         muiTableBodyCellProps: { align: "center" },
         Cell: ({ cell }) => <StatusBadge isActive={cell.getValue<boolean>()} />,
       },
       {
         accessorKey: "createdAt",
-        header: "Created",
+        header: t("labels.created", "Created"),
         size: 120,
+        Filter: DateColumnFilter,
         Cell: ({ cell }) => {
           const val = cell.getValue<string | null>();
           return val ? new Date(val).toLocaleDateString() : "—";
         },
       },
+      {
+        id: "actions",
+        header: t("student.actions", "Actions"),
+        size: 100,
+        muiTableHeadCellProps: { align: "center" },
+        muiTableBodyCellProps: { align: "center" },
+        Cell: ({ row }) => (
+          <div className="flex items-center justify-center gap-1">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEditProgram?.(row.original);
+              }}
+              className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+              title={t("global.edit", "Edit")}
+            >
+              <Edit2 size={16} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete(row.original.id);
+              }}
+              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
+              title={t("global.delete", "Delete")}
+            >
+              <Trash2 size={16} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleActivation(row.original);
+              }}
+              className={`p-2 rounded-full transition-colors ${
+                row.original.isActive
+                  ? "text-orange-400 hover:text-orange-600 hover:bg-orange-50"
+                  : "text-green-400 hover:text-green-600 hover:bg-green-50"
+              }`}
+              title={row.original.isActive ? t("labels.deactivate_account", "Deactivate") : t("labels.reactivate_account", "Activate")}
+            >
+              {row.original.isActive ? <Ban size={16} /> : <CheckCircle size={16} />}
+            </button>
+          </div>
+        ),
+      },
     ],
-    [t]
+    [t, onEditProgram]
   );
 
   return (
@@ -109,6 +232,8 @@ export function ProgramsGrid({ externalFilters }: ProgramsGridProps) {
       onFetchData={fetchPrograms}
       initialPageSize={10}
       pageSizeOptions={[5, 10, 25, 50]}
+      enableHiding
+      enableColumnFilters
     />
   );
 }

@@ -23,12 +23,14 @@ export function useStudents(externalFilters: StudentFilterParams) {
     try {
       const { status, scholarshipType } = filtersRef.current;
       const search = params.globalFilter?.trim();
+      const filters = params.columnFilters?.length ? JSON.stringify(params.columnFilters) : undefined;
       const result = await studentApi.getStudents({
         skip: params.page * params.pageSize,
         take: params.pageSize,
         ...(search ? { search } : {}),
         ...(status ? { status } : {}),
         ...(scholarshipType ? { scholarshipType } : {}),
+        ...(filters ? { filters } : {}),
         ...(params.sorting[0]
           ? { sort: params.sorting[0].id, order: params.sorting[0].desc ? 'desc' : 'asc' }
           : {}),

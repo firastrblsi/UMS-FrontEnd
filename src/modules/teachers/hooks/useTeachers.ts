@@ -22,17 +22,17 @@ export function useTeachers(externalFilters: TeacherFilterParams) {
     }
 
     try {
-      const { status, title, contractType, specialization, departmentId } = filtersRef.current;
-      const search = params.globalFilter?.trim();
+      const { departmentId, status } = filtersRef.current || {};
+      const isActive = status === 'active' ? true : status === 'inactive' ? false : undefined;
+      const search = params.globalFilter?.trim() || undefined;
+      const filters = params.columnFilters?.length ? JSON.stringify(params.columnFilters) : undefined;
       const result = await teacherApi.getTeachers({
         skip: params.page * params.pageSize,
         take: params.pageSize,
         ...(search ? { search } : {}),
-        ...(status ? { isActive: status === 'active' } : {}),
-        ...(title ? { title } : {}),
-        ...(contractType ? { contractType } : {}),
-        ...(specialization ? { specialization } : {}),
         ...(departmentId ? { departmentId } : {}),
+        ...(isActive !== undefined ? { isActive } : {}),
+        ...(filters ? { filters } : {}),
         ...(params.sorting[0]
           ? { sort: params.sorting[0].id, order: params.sorting[0].desc ? 'desc' : 'asc' }
           : {}),
