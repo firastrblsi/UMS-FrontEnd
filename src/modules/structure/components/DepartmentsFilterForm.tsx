@@ -32,7 +32,7 @@ const DepartmentsFilterForm = () => {
           isFilter
         ></Input>
       </div>
-      <div className="self-center flex gap-3">
+      <div className="self-end flex gap-3 mt-4">
         <Button type="reset" buttonType="secondary" height={35} radius={7}>
           <span className="font-light">{t("global.reset")}</span>
         </Button>

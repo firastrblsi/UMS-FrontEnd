@@ -2,7 +2,7 @@ import { axiosInstance } from "./axios";
 import type { AxiosRequestConfig } from "axios";
 
 export class BaseApi {
-  constructor(private readonly basePath: string) {}
+  constructor(protected readonly basePath: string) {}
 
   async getAll<T>(
     params?: Record<string, unknown>,

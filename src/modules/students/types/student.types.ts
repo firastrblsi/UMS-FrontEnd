@@ -18,6 +18,14 @@ export interface Student {
   country: string | null;
   
   // Academic Background
+  programId?: string | null;
+  classGroupId?: string | null;
+  nationalId?: string | null;
+  expectedGradDate?: string | null;
+  actualGradDate?: string | null;
+  currentYearNumber?: number | null;
+  previousInstitution?: string | null;
+  baccalaureateField?: string | null;
   baccalaureateType: string | null;
   baccalaureateYear: number | null;
   baccalaureateScore: number | null;
@@ -32,6 +40,8 @@ export interface Student {
   // Medical Info
   bloodGroup: string | null;
   medicalConditions: string | null;
+  hasMedicalNeeds?: boolean | null;
+  medicalNotes?: string | null;
 
   createdAt: string;
   updatedAt: string;
@@ -44,6 +54,18 @@ export interface Student {
     lastName: string;
     phone: string | null;
     isActive: boolean;
+    gender?: "MALE" | "FEMALE";
+    nationality?: string | null;
+    profilePicture?: { url: string } | null;
+  };
+  program?: {
+    id: string;
+    name: string;
+    code: string;
+  };
+  classGroup?: {
+    id: string;
+    name: string;
   };
 }
 
@@ -60,4 +82,5 @@ export interface StudentFilterParams {
   take?: number;
   sort?: string;
   order?: 'asc' | 'desc';
+  filters?: string;
 }

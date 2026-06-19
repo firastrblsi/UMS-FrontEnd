@@ -1,23 +1,24 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import StudentsFilterForm from "../components/StudentsFilterForm";
 import { StudentsGrid } from "../components/StudentsGrid";
 import AddStudentForm from "../components/AddStudentForm";
 import UpdateStudentForm from "../components/UpdateStudentForm";
-import type { StudentFilterParams, Student } from "../types/student.types";
+import { StudentProfileDialog } from "../components/StudentProfileDialog";
+import type { Student } from "../types/student.types";
 import { Dialog } from "@/shared/ui/Dialog";
 import { Button } from "@/shared/ui/Button";
-import { Plus, RefreshCw, Funnel } from "lucide-react";
+import { Plus, RefreshCw } from "lucide-react";
 import { studentApi } from "../api/studentApi";
 import { toaster } from "@/components/ui/toaster";
 
 const Students = () => {
   const { t } = useTranslation();
-  const [filters, setFilters] = useState<StudentFilterParams>({});
+
   const [showAddStudent, setShowAddStudent] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+  const [viewingStudent, setViewingStudent] = useState<Student | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [showFilters, setShowFilters] = useState(false);
+
 
   const handleRefresh = () => {
     setRefreshTrigger(prev => prev + 1);
@@ -58,15 +59,7 @@ const Students = () => {
           >
             <RefreshCw size={16} />
           </Button>
-          <Button
-            height={30}
-            radius={10}
-            buttonType="secondary"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Funnel />
-            <span className="">{t("global.filters")}</span>
-          </Button>
+
           <Button height={30} radius={10} className="flex gap-3" onClick={() => setShowAddStudent(true)}>
             <span className="font-light">{t("student.add_student")}</span>
             <Plus />
@@ -88,16 +81,12 @@ const Students = () => {
         </div>
       </div>
 
-      {showFilters && (
-        <div>
-          <StudentsFilterForm onFilter={setFilters} />
-        </div>
-      )}
+
 
       <StudentsGrid 
-        filters={filters} 
         trigger={refreshTrigger}
         onEditStudent={(student) => setEditingStudent(student)}
+        onViewStudent={(student) => setViewingStudent(student)}
         onToggleActivation={(userId, currentStatus) => {
           if (currentStatus) {
             handleDeactivate(userId);
@@ -105,6 +94,12 @@ const Students = () => {
             handleReactivate(userId);
           }
         }}
+      />
+
+      <StudentProfileDialog
+        open={!!viewingStudent}
+        onOpenChange={(open) => !open && setViewingStudent(null)}
+        student={viewingStudent}
       />
 
       <Dialog

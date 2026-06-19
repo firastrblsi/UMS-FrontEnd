@@ -47,6 +47,11 @@ class StudentApi extends BaseApi {
     return this.getAll<StudentListResponse>(params as Record<string, unknown>);
   }
 
+  async getProfileByUserId(userId: string): Promise<any> {
+    const res = await axiosInstance.get(`/student-profiles/user/${userId}`);
+    return res.data;
+  }
+
   async createStudent(data: CreateStudentPayload): Promise<void> {
     // 1. Create User
     const userPayload = {
@@ -80,9 +85,9 @@ class StudentApi extends BaseApi {
       baccalaureateGrade: data.baccalaureateGrade,
       baccalaureateYear: data.baccalaureateYear ? Number(data.baccalaureateYear) : undefined,
       currentYearNumber: data.currentYearNumber ? Number(data.currentYearNumber) : undefined,
-      enrollmentDate: data.enrollmentDate ? new Date(data.enrollmentDate).toISOString() : undefined,
-      expectedGradDate: data.expectedGradDate ? new Date(data.expectedGradDate).toISOString() : undefined,
-      actualGradDate: data.actualGradDate ? new Date(data.actualGradDate).toISOString() : undefined,
+      enrollmentDate: data.enrollmentDate ? (data.enrollmentDate.includes('T') ? data.enrollmentDate : `${data.enrollmentDate}T00:00:00Z`) : data.enrollmentDate,
+      expectedGradDate: data.expectedGradDate ? (data.expectedGradDate.includes('T') ? data.expectedGradDate : `${data.expectedGradDate}T00:00:00Z`) : data.expectedGradDate,
+      actualGradDate: data.actualGradDate ? (data.actualGradDate.includes('T') ? data.actualGradDate : `${data.actualGradDate}T00:00:00Z`) : data.actualGradDate,
       guardianName: data.guardianName,
       guardianEmail: data.guardianEmail,
       guardianPhone: data.guardianPhone,
@@ -121,9 +126,9 @@ class StudentApi extends BaseApi {
       baccalaureateGrade: data.baccalaureateGrade,
       baccalaureateYear: data.baccalaureateYear ? Number(data.baccalaureateYear) : undefined,
       currentYearNumber: data.currentYearNumber ? Number(data.currentYearNumber) : undefined,
-      enrollmentDate: data.enrollmentDate ? new Date(data.enrollmentDate).toISOString() : undefined,
-      expectedGradDate: data.expectedGradDate ? new Date(data.expectedGradDate).toISOString() : undefined,
-      actualGradDate: data.actualGradDate ? new Date(data.actualGradDate).toISOString() : undefined,
+      enrollmentDate: data.enrollmentDate ? (data.enrollmentDate.includes('T') ? data.enrollmentDate : `${data.enrollmentDate}T00:00:00Z`) : data.enrollmentDate,
+      expectedGradDate: data.expectedGradDate ? (data.expectedGradDate.includes('T') ? data.expectedGradDate : `${data.expectedGradDate}T00:00:00Z`) : data.expectedGradDate,
+      actualGradDate: data.actualGradDate ? (data.actualGradDate.includes('T') ? data.actualGradDate : `${data.actualGradDate}T00:00:00Z`) : data.actualGradDate,
       guardianName: data.guardianName,
       guardianEmail: data.guardianEmail,
       guardianPhone: data.guardianPhone,
