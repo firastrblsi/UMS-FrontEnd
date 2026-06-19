@@ -21,7 +21,12 @@ import Teachers from "@/modules/teachers/pages/Teachers";
 import Students from "@/modules/students/pages/Students";
 import Programs from "@/modules/structure/pages/Programs";
 import Rooms from "@/modules/structure/pages/Rooms";
+import AcademicYears from "@/modules/structure/pages/AcademicYears";
+import Semesters from "@/modules/structure/pages/Semesters";
+import ClassGroups from "@/modules/structure/pages/ClassGroups";
+import Holidays from "@/modules/structure/pages/Holidays";
 import Settings from "@/modules/dashboard/pages/Settings";
+import MyProfile from "@/modules/profile/pages/MyProfile";
 
 function NoAuthGuard({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
@@ -73,7 +78,7 @@ export function AppRouter() {
                 />
                 <Route
                   path="/profile"
-                  element={<div className="p-8">Profile</div>}
+                  element={<MyProfile />}
                 />
                 <Route
                   path="/settings"
@@ -116,6 +121,10 @@ export function AppRouter() {
                   <Route path="/departments" element={<Departments />} />
                   <Route path="/programs" element={<Programs />} />
                   <Route path="/rooms" element={<Rooms />} />
+                  <Route path="/academic-years" element={<AcademicYears />} />
+                  <Route path="/semesters" element={<Semesters />} />
+                  <Route path="/class-groups" element={<ClassGroups />} />
+                  <Route path="/holidays" element={<Holidays />} />
                   <Route
                     path="/finance"
                     element={<div className="p-8">Finance — Sprint 4</div>}

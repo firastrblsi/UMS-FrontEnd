@@ -38,7 +38,7 @@ export const CLASS_ENDPOINTS = {
 
 // Teacher endpoints
 export const TEACHER_ENDPOINTS = {
-  BASE: "/teachers",
+  BASE: "/teacher-profiles",
 };
 
 // Department endpoints

@@ -11,6 +11,11 @@ import {
   Landmark,
   BookOpen,
   Building,
+  User,
+  Calendar,
+  CalendarDays,
+  Layers,
+  CalendarRange
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAppDispatch } from "@/core/hooks/useAppDispatch";
@@ -57,14 +62,44 @@ const NAV_ITEMS: NavItem[] = [
   {
     to: "/programs",
     icon: BookOpen,
-    labelKey: "routes.programs", // Ensure t("routes.programs") or fallback works
+    labelKey: "routes.programs",
     roles: ["ADMIN"],
   },
   {
     to: "/rooms",
     icon: Building,
-    labelKey: "routes.rooms", // Ensure t("routes.rooms") or fallback works
+    labelKey: "routes.rooms",
     roles: ["ADMIN"],
+  },
+  {
+    to: "/academic-years",
+    icon: Calendar,
+    labelKey: "routes.academic_years",
+    roles: ["ADMIN"],
+  },
+  {
+    to: "/semesters",
+    icon: CalendarRange,
+    labelKey: "routes.semesters",
+    roles: ["ADMIN"],
+  },
+  {
+    to: "/class-groups",
+    icon: Layers,
+    labelKey: "routes.class_groups",
+    roles: ["ADMIN"],
+  },
+  {
+    to: "/holidays",
+    icon: CalendarDays,
+    labelKey: "routes.holidays",
+    roles: ["ADMIN"],
+  },
+  {
+    to: "/profile",
+    icon: User,
+    labelKey: "routes.my_profile",
+    roles: ["TEACHER", "STUDENT", "ADMIN"],
   },
 ];
 
@@ -83,7 +118,7 @@ const Sidebar = () => {
     `flex items-center h-10 transition-colors ${
       isCollapsed
         ? "w-10 rounded-full justify-center"
-        : "w-[90%] rounded-lg ps-5"
+        : "w-56 rounded-lg ps-5"
     } ${
       isActive ? "active-route" : "text-black bg-gray-100 hover:bg-gray-200"
     }`;
@@ -91,16 +126,30 @@ const Sidebar = () => {
     <div
       className={`border transition-all duration-300 ease-in-out relative py-6 rounded-2xl bg-white flex-col justify-between items-center ${isCollapsed ? "md:w-23 md:flex hidden" : "md:w-70  flex"}`}
     >
-      <div
-        className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 hidden md:block"
+      {/* Symmetric Bridge SVG Notch */}
+      <div className="absolute -right-[25px] top-1/2 -translate-y-1/2 hidden md:block pointer-events-none z-10">
+        <svg width="40" height="64" viewBox="0 0 40 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Fill the symmetric notch background perfectly */}
+          <path d="M 15.5 0 L 15.5 8 C 15.5 16, 2 16, 2 32 C 2 48, 15.5 48, 15.5 56 L 15.5 64 L 24.5 64 L 24.5 56 C 24.5 48, 38 48, 38 32 C 38 16, 24.5 16, 24.5 8 L 24.5 0 Z" fill="#f3f4f6" />
+          {/* Stroke the left curve */}
+          <path d="M 15.5 0 L 15.5 8 C 15.5 16, 2 16, 2 32 C 2 48, 15.5 48, 15.5 56 L 15.5 64" fill="none" stroke="#e5e7eb" strokeWidth="1" />
+          {/* Stroke the right curve */}
+          <path d="M 24.5 0 L 24.5 8 C 24.5 16, 38 16, 38 32 C 38 48, 24.5 48, 24.5 56 L 24.5 64" fill="none" stroke="#e5e7eb" strokeWidth="1" />
+        </svg>
+      </div>
+
+      {/* Perfectly Centered Toggle Button */}
+      <button
+        className="absolute -right-[19px] top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-7 h-7 bg-white rounded-full shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 hover:bg-gray-50 transition-colors focus:outline-none"
         onClick={() => dispatch(toggleSidebar())}
+        aria-label="Toggle Sidebar"
       >
         {isCollapsed ? (
-          <ChevronRight className="collapse-button" />
+          <ChevronRight size={16} strokeWidth={2.5} className="ml-0.5" />
         ) : (
-          <ChevronLeft className="collapse-button" />
+          <ChevronLeft size={16} strokeWidth={2.5} className="mr-0.5" />
         )}
-      </div>
+      </button>
 
       <div className={`px-1 ${isCollapsed ? "w-[85%]" : "w-[75%]"}`}>
         <img src={isCollapsed ? Logo : sesame} alt="Logo" className="" />
@@ -133,7 +182,7 @@ const Sidebar = () => {
               to="/settings"
               title="settings"
               className={({ isActive }) =>
-                ` flex items-center   ${isCollapsed ? "w-10 rounded-full justify-center" : "w-[90%] rounded-lg ps-5"} h-10   transition-colors ${
+                ` flex items-center   ${isCollapsed ? "w-10 rounded-full justify-center" : "w-56 rounded-lg ps-5"} h-10   transition-colors ${
                   isActive
                     ? "active-route"
                     : "text-black bg-gray-100 hover:bg-gray-200 "
@@ -149,7 +198,7 @@ const Sidebar = () => {
           <li className="flex justify-center gap-2 items-center w-full">
             <span
               onClick={() => dispatch(logout())}
-              className={`flex items-center cursor-pointer  ${isCollapsed ? "w-10 rounded-full justify-center" : "w-[90%] rounded-lg ps-5"} h-10   transition-colors text-black bg-gray-100 hover:bg-gray-200`}
+              className={`flex items-center cursor-pointer  ${isCollapsed ? "w-10 rounded-full justify-center" : "w-56 rounded-lg ps-5"} h-10   transition-colors text-black bg-gray-100 hover:bg-gray-200`}
             >
               <LogOut size={15} />
               {!isCollapsed && (

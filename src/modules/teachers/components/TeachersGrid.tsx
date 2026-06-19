@@ -1,8 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { MRT_ColumnDef } from "material-react-table";
+
+import { Edit2, Eye, UserX, UserCheck } from "lucide-react";
 import { DataTable } from "@/shared/ui/DataTable";
 import { useTeachers } from "../hooks/useTeachers";
+import { DateColumnFilter } from "@/shared/ui/DateColumnFilter";
 import type {
   Teacher,
   TeacherFilterParams,
@@ -72,13 +75,23 @@ function ContractBadge({ type }: { type: ContractType }) {
 // ─── Grid ─────────────────────────────────────────────────────────────────────
 
 interface TeachersGridProps {
-  externalFilters: TeacherFilterParams;
+  filters?: TeacherFilterParams;
+  trigger: number;
+  onEditTeacher?: (teacher: Teacher) => void;
+  onViewTeacher?: (teacher: Teacher) => void;
+  onToggleActivation?: (userId: string, isActive: boolean) => void;
 }
 
-export function TeachersGrid({ externalFilters }: TeachersGridProps) {
+export function TeachersGrid({
+  filters,
+  trigger,
+  onEditTeacher,
+  onViewTeacher,
+  onToggleActivation,
+}: TeachersGridProps) {
   const { t } = useTranslation();
   const { data, rowCount, isLoading, isFetching, fetchTeachers } =
-    useTeachers(externalFilters);
+    useTeachers(filters || {});
 
   const columns = useMemo<MRT_ColumnDef<Teacher>[]>(
     () => [
@@ -182,6 +195,13 @@ export function TeachersGrid({ externalFilters }: TeachersGridProps) {
         accessorKey: "contractType",
         header: t("labels.contract"),
         size: 120,
+        filterVariant: 'select',
+        filterSelectOptions: [
+          { value: 'PERMANENT', label: t('teacher.contract.PERMANENT', 'Permanent') },
+          { value: 'CONTRACT', label: t('teacher.contract.CONTRACT', 'Contract') },
+          { value: 'PART_TIME', label: t('teacher.contract.PART_TIME', 'Part-time') },
+          { value: 'VISITING', label: t('teacher.contract.VISITING', 'Visiting') },
+        ],
         muiTableHeadCellProps: { align: "center" },
         muiTableBodyCellProps: { align: "center" },
         Cell: ({ cell }) => {
@@ -197,6 +217,13 @@ export function TeachersGrid({ externalFilters }: TeachersGridProps) {
         accessorKey: "highestDegree",
         header: t("labels.degree"),
         size: 100,
+        filterVariant: 'select',
+        filterSelectOptions: [
+          { value: 'PHD', label: t('teacher.degree.PHD', 'PhD') },
+          { value: 'MASTER', label: t('teacher.degree.MASTER', 'Master') },
+          { value: 'BACHELOR', label: t('teacher.degree.BACHELOR', 'Bachelor') },
+          { value: 'OTHER', label: t('teacher.degree.OTHER', 'Other') },
+        ],
         muiTableHeadCellProps: { align: "center" },
         muiTableBodyCellProps: { align: "center" },
         Cell: ({ cell }) => {
@@ -214,6 +241,7 @@ export function TeachersGrid({ externalFilters }: TeachersGridProps) {
         accessorKey: "hireDate",
         header: t("labels.hire_date"),
         size: 120,
+        Filter: DateColumnFilter,
         muiTableHeadCellProps: { align: "center" },
         muiTableBodyCellProps: { align: "center" },
         Cell: ({ cell }) => {
@@ -234,6 +262,11 @@ export function TeachersGrid({ externalFilters }: TeachersGridProps) {
         accessorFn: (row) => row.user?.isActive,
         header: t("labels.status"),
         size: 100,
+        filterVariant: 'select',
+        filterSelectOptions: [
+          { value: 'true', label: t('labels.active', 'Active') },
+          { value: 'false', label: t('labels.inactive', 'Inactive') },
+        ],
         muiTableHeadCellProps: { align: "center" },
         muiTableBodyCellProps: { align: "center" },
         Cell: ({ cell }) => <StatusBadge isActive={!!cell.getValue<boolean | undefined>()} />,
@@ -242,6 +275,7 @@ export function TeachersGrid({ externalFilters }: TeachersGridProps) {
         accessorKey: "createdAt",
         header: t("labels.created"),
         size: 120,
+        Filter: DateColumnFilter,
         Cell: ({ cell }) =>
           new Date(cell.getValue<string>()).toLocaleDateString("en-GB", {
             year: "numeric",
@@ -249,13 +283,72 @@ export function TeachersGrid({ externalFilters }: TeachersGridProps) {
             day: "2-digit",
           }),
       },
+      {
+        id: "actions",
+        header: t("global.actions", "Actions"),
+        size: 150,
+        muiTableHeadCellProps: { align: "right" },
+        muiTableBodyCellProps: { align: "right" },
+        Cell: ({ row }) => (
+          <div className="flex justify-end items-center gap-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onViewTeacher?.(row.original);
+              }}
+              className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+              title={t("labels.view_profile", "View Profile")}
+            >
+              <Eye size={16} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEditTeacher?.(row.original);
+              }}
+              className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+              title={t("global.edit", "Edit")}
+            >
+              <Edit2 size={16} />
+            </button>
+            {row.original.user && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleActivation?.(row.original.userId, !!row.original.user?.isActive);
+                }}
+                className={`p-2 rounded-full transition-colors ${
+                  row.original.user.isActive
+                    ? "text-red-400 hover:text-red-600 hover:bg-red-50"
+                    : "text-green-400 hover:text-green-600 hover:bg-green-50"
+                }`}
+                title={row.original.user.isActive ? t("labels.deactivate_account") : t("labels.reactivate_account")}
+              >
+                {row.original.user.isActive ? <UserX size={16} /> : <UserCheck size={16} />}
+              </button>
+            )}
+          </div>
+        ),
+      },
     ],
-    [t],
+    [t, onEditTeacher, onViewTeacher, onToggleActivation],
   );
+
+  useEffect(() => {
+    if (trigger > 0) {
+      fetchTeachers({
+        page: 0,
+        pageSize: 10,
+        sorting: [],
+        columnFilters: [],
+        globalFilter: "",
+      });
+    }
+  }, [trigger, fetchTeachers]);
 
   return (
     <DataTable<Teacher>
-      key={JSON.stringify(externalFilters)}
+      key={JSON.stringify(filters)}
       columns={columns}
       data={data}
       isLoading={isLoading}
@@ -265,6 +358,7 @@ export function TeachersGrid({ externalFilters }: TeachersGridProps) {
       initialPageSize={10}
       pageSizeOptions={[5, 10, 25, 50]}
       enableHiding
+      enableColumnFilters
       initialState={{
         columnVisibility: {
           employeeId: false,

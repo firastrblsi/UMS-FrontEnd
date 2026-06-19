@@ -1,32 +1,88 @@
 import { useState } from "react";
-import ProgramsFilterForm from "../components/ProgramsFilterForm";
 import { ProgramsGrid } from "../components/ProgramsGrid";
-import type { ProgramFilterParams } from "../api/programApi";
+import { Button } from "@/shared/ui/Button";
+import { Plus, RefreshCw } from "lucide-react";
+import { Dialog } from "@/shared/ui/Dialog";
+import AddProgramForm from "../components/AddProgramForm";
+import UpdateProgramForm from "../components/UpdateProgramForm";
+import type { Program } from "../types/university.types";
+import { useTranslation } from "react-i18next";
 
 const Programs = () => {
-  const [filters, setFilters] = useState<ProgramFilterParams>({});
+
+  const [showAddProgram, setShowAddProgram] = useState(false);
+  const [editingProgram, setEditingProgram] = useState<Program | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const { t } = useTranslation();
+
+  const handleRefresh = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
 
   return (
-    <div className="flex flex-col gap-6 h-full p-2 lg:p-6 w-full max-w-[1400px] mx-auto animate-fade-in">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800 tracking-tight">
-            Programs
-          </h1>
-          <p className="text-slate-500 mt-1">Manage university programs and degrees</p>
+    <div className="flex flex-col gap-10 md:gap-15">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center">
+        <h1 className="text-2xl mb-3 md:mb-0">{t("routes.programs")}</h1>
+        
+        <div className="flex gap-2 justify-center">
+          <Button
+            buttonType="secondary"
+            height={30}
+            radius={10}
+            className="flex items-center justify-center p-2"
+            onClick={handleRefresh}
+            title="Refresh List"
+          >
+            <RefreshCw size={16} />
+          </Button>
+
+          <Button height={30} radius={10} className="flex gap-3" onClick={() => setShowAddProgram(true)}>
+            <span className="font-light">{t("global.add_program")}</span>
+            <Plus />
+          </Button>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-        <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-          Filters
-        </h2>
-        <ProgramsFilterForm onFilter={setFilters} />
-      </div>
+      <Dialog
+        open={showAddProgram}
+        onClose={() => setShowAddProgram(false)}
+        title={t("global.add_program")}
+        size="lg"
+      >
+        <AddProgramForm 
+          onSuccess={() => {
+            setShowAddProgram(false);
+            handleRefresh();
+          }}
+          onCancel={() => setShowAddProgram(false)}
+        />
+      </Dialog>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-1 min-h-[400px]">
-        <ProgramsGrid externalFilters={filters} />
-      </div>
+
+
+      <ProgramsGrid 
+        trigger={refreshTrigger}
+        onEditProgram={(prog) => setEditingProgram(prog)}
+      />
+
+      <Dialog
+        open={!!editingProgram}
+        onClose={() => setEditingProgram(null)}
+        title={t("global.update_program")}
+        size="lg"
+      >
+        {editingProgram && (
+          <UpdateProgramForm 
+            program={editingProgram}
+            onSuccess={() => {
+              setEditingProgram(null);
+              handleRefresh();
+            }}
+            onCancel={() => setEditingProgram(null)}
+          />
+        )}
+      </Dialog>
     </div>
   );
 };

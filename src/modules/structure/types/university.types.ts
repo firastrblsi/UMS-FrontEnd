@@ -1,4 +1,4 @@
-export type RoomType = 'CLASSROOM' | 'LABORATORY' | 'AMPHITHEATER' | 'MEETING_ROOM' | 'OFFICE' | 'OTHER';
+export type RoomType = 'CLASSROOM' | 'LAB' | 'EXAM_HALL' | 'AMPHITHEATER' | 'MEETING_ROOM' | 'OFFICE' | 'OTHER';
 
 export interface Program {
   id: string;
@@ -7,6 +7,8 @@ export interface Program {
   description: string | null;
   degreeType: 'BACHELOR' | 'MASTER' | 'PHD';
   departmentId: string;
+  totalCredits: number;
+  numberOfSemesters: number;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -50,7 +52,7 @@ export interface Room {
   capacity: number;
   type: RoomType;
   building: string | null;
-  floor: string | null;
+  floor: number | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

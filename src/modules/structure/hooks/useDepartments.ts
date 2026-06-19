@@ -1,55 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import type { FetchDataParams } from '@/shared/ui/DataTable';
 import type { Department } from '../types/department.types';
-import { DUMMY_DEPARTMENTS } from '../types/department.types';
-
-// Simulates server-side filtering, sorting, and pagination on dummy data.
-// Replace the body of fetchDepartments with a real API call once the backend is ready:
-//   const result = await departmentApi.getDepartments({ page, pageSize, sort, order, search });
-//   setData(result.data); setRowCount(result.total);
-function mockFetch(params: FetchDataParams): Promise<{ data: Department[]; total: number }> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      let rows = [...DUMMY_DEPARTMENTS];
-
-      // Global text search
-      if (params.globalFilter) {
-        const q = params.globalFilter.toLowerCase();
-        rows = rows.filter(
-          (d) =>
-            d.name.toLowerCase().includes(q) ||
-            d.code.toLowerCase().includes(q) ||
-            (d.description && d.description.toLowerCase().includes(q)),
-        );
-      }
-
-      // Column filters
-      for (const { id, value } of params.columnFilters) {
-        if (!value) continue;
-        const v = String(value).toLowerCase();
-        rows = rows.filter((d) => {
-          const cell = String(d[id as keyof Department] ?? '').toLowerCase();
-          return cell.includes(v);
-        });
-      }
-
-      // Sorting (single-column)
-      if (params.sorting.length > 0) {
-        const { id, desc } = params.sorting[0];
-        rows.sort((a, b) => {
-          const av = String(a[id as keyof Department] ?? '');
-          const bv = String(b[id as keyof Department] ?? '');
-          const cmp = av.localeCompare(bv, undefined, { numeric: true });
-          return desc ? -cmp : cmp;
-        });
-      }
-
-      const total = rows.length;
-      const start = params.page * params.pageSize;
-      resolve({ data: rows.slice(start, start + params.pageSize), total });
-    }, 400);
-  });
-}
+import { departmentApi } from '../api/departmentApi';
 
 export function useDepartments() {
   const [data, setData] = useState<Department[]>([]);
@@ -66,9 +18,22 @@ export function useDepartments() {
     }
 
     try {
-      const result = await mockFetch(params);
+      const search = params.globalFilter?.trim();
+      const filters = params.columnFilters?.length ? JSON.stringify(params.columnFilters) : undefined;
+      const result = await departmentApi.getDepartments({
+        skip: params.page * params.pageSize,
+        take: params.pageSize,
+        ...(search ? { search } : {}),
+        ...(filters ? { filters } : {}),
+        ...(params.sorting[0]
+          ? { sort: params.sorting[0].id, order: params.sorting[0].desc ? 'desc' : 'asc' }
+          : {}),
+      });
       setData(result.data);
       setRowCount(result.total);
+    } catch {
+      setData([]);
+      setRowCount(0);
     } finally {
       isFirstFetch.current = false;
       setIsLoading(false);

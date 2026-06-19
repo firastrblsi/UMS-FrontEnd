@@ -12,7 +12,7 @@ interface RoomsFilterFormProps {
 const RoomsFilterForm = ({ onFilter }: RoomsFilterFormProps) => {
   const { t } = useTranslation();
 
-  const [type, setType] = useState<"" | "CLASSROOM" | "LABORATORY" | "AMPHITHEATER" | "MEETING_ROOM" | "OFFICE" | "OTHER">("");
+  const [type, setType] = useState<"" | "CLASSROOM" | "LAB" | "AMPHITHEATER" | "MEETING_ROOM" | "OFFICE" | "OTHER">("");
   const [building, setBuilding] = useState("");
   const [isActive, setIsActive] = useState<"true" | "false" | "">("");
 
@@ -50,7 +50,7 @@ const RoomsFilterForm = ({ onFilter }: RoomsFilterFormProps) => {
           placeholder={t("labels.all")}
           options={[
             { value: "CLASSROOM", label: "Classroom" },
-            { value: "LABORATORY", label: "Laboratory" },
+            { value: 'LAB', label: t("labels.laboratory") || 'Laboratory' },
             { value: "AMPHITHEATER", label: "Amphitheater" },
             { value: "MEETING_ROOM", label: "Meeting Room" },
             { value: "OFFICE", label: "Office" },
