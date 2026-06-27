@@ -40,7 +40,7 @@ export function Dialog({
       >
         <ChakraDialog.Backdrop />
         <ChakraDialog.Positioner>
-          <ChakraDialog.Content overflow="hidden">
+          <ChakraDialog.Content>
             {/* Header */}
             <ChakraDialog.Header
               display="flex"
@@ -73,7 +73,7 @@ export function Dialog({
             </ChakraDialog.Header>
 
             {/* Body */}
-            <ChakraDialog.Body px={6} py={5}>
+            <ChakraDialog.Body px={6} py={5} overflowY="auto" maxH="75vh">
               {children}
             </ChakraDialog.Body>
           </ChakraDialog.Content>

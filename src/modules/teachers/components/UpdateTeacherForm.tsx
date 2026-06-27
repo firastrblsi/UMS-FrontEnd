@@ -18,7 +18,7 @@ const teacherSchema = z.object({
   firstName: z.string().min(2, 'First name is required'),
   lastName: z.string().min(2, 'Last name is required'),
   phone: z.string().optional(),
-  gender: z.string().optional(),
+  gender: z.string().min(1, 'Gender is required'),
   nationality: z.string().min(2, 'Nationality is required'),
   employeeId: z.string().optional(),
   title: z.any().optional(),
@@ -50,6 +50,35 @@ const UpdateTeacherForm = ({ teacher, onSuccess, onCancel }: UpdateTeacherFormPr
   const [departments, setDepartments] = useState<{value: string; label: string}[]>([]);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [activeTab, setActiveTab] = useState("user");
+
+  const onError = (errors: any) => {
+    const firstErrorField = Object.keys(errors)[0];
+    const tabMap: Record<string, string> = {
+      firstName: "user",
+      lastName: "user",
+      email: "user",
+      phone: "user",
+      gender: "user",
+      nationality: "user",
+      bio: "user",
+      title: "professional",
+      departmentId: "professional",
+      specialization: "professional",
+      professionalEmail: "professional",
+      highestDegree: "education",
+      degreeField: "education",
+      degreeInstitution: "education",
+      contractType: "education",
+      hireDate: "education",
+      endDate: "education",
+      officeRoom: "office",
+      officeHours: "office"
+    };
+    if (firstErrorField && tabMap[firstErrorField]) {
+      setActiveTab(tabMap[firstErrorField]);
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -136,8 +165,8 @@ const UpdateTeacherForm = ({ teacher, onSuccess, onCancel }: UpdateTeacherFormPr
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
-      <Tabs.Root defaultValue="user" variant="enclosed" colorPalette="blue">
+    <form onSubmit={handleSubmit(onSubmit, onError)} className="flex flex-col gap-6" noValidate>
+      <Tabs.Root value={activeTab} onValueChange={(e) => setActiveTab(e.value)} variant="enclosed" colorPalette="blue">
         <Tabs.List>
           <Tabs.Trigger value="user">User Details</Tabs.Trigger>
           <Tabs.Trigger value="professional">Professional</Tabs.Trigger>

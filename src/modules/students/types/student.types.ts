@@ -1,5 +1,5 @@
-export type StudentStatus = 'ACTIVE' | 'INACTIVE' | 'GRADUATED' | 'SUSPENDED' | 'DROPPED_OUT';
-export type ScholarshipType = 'NONE' | 'FULL' | 'PARTIAL' | 'MERIT' | 'ATHLETIC';
+export type StudentStatus = 'ENROLLED' | 'SUSPENDED' | 'GRADUATED' | 'WITHDRAWN' | 'DEFERRED';
+export type ScholarshipType = 'NONE' | 'PARTIAL' | 'FULL' | 'MERIT';
 
 export interface Student {
   id: string; // StudentProfile ID

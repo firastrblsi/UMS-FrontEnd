@@ -9,7 +9,7 @@ export interface ProgramListResponse {
 
 export interface ProgramFilterParams {
   departmentId?: string;
-  degreeType?: 'BACHELOR' | 'MASTER' | 'PHD' | '';
+  degreeType?: 'BACHELOR' | 'MASTER' | 'DIPLOMA' | 'CERTIFICATE' | '';
   isActive?: boolean | '';
   search?: string;
   skip?: number;

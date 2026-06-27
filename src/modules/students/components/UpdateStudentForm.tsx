@@ -20,7 +20,7 @@ const studentSchema = z.object({
   firstName: z.string().min(2, 'First name is required'),
   lastName: z.string().min(2, 'Last name is required'),
   phone: z.string().optional(),
-  gender: z.string().optional(),
+  gender: z.string().min(1, 'Gender is required'),
   nationality: z.string().min(2, 'Nationality is required'),
   programId: z.string().min(1, 'Program is required'),
   classGroupId: z.string().optional(),
@@ -58,6 +58,46 @@ const UpdateStudentForm = ({ student, onSuccess, onCancel }: UpdateStudentFormPr
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [activeTab, setActiveTab] = useState("user");
+
+  const onError = (errors: any) => {
+    const firstErrorField = Object.keys(errors)[0];
+    const tabMap: Record<string, string> = {
+      firstName: "user",
+      lastName: "user",
+      nationality: "user",
+      email: "user",
+      phone: "user",
+      gender: "user",
+      
+      nationalId: "academic",
+      programId: "academic",
+      classGroupId: "academic",
+      status: "academic",
+      scholarshipType: "academic",
+      
+      enrollmentDate: "enrollment",
+      expectedGradDate: "enrollment",
+      actualGradDate: "enrollment",
+      currentYearNumber: "enrollment",
+      transportMode: "enrollment",
+      previousInstitution: "enrollment",
+      baccalaureateField: "enrollment",
+      baccalaureateYear: "enrollment",
+      baccalaureateGrade: "enrollment",
+      
+      guardianName: "guardian",
+      guardianPhone: "guardian",
+      guardianEmail: "guardian",
+      guardianRelation: "guardian",
+      hasMedicalNeeds: "guardian",
+      medicalNotes: "guardian",
+    };
+    if (firstErrorField && tabMap[firstErrorField]) {
+      setActiveTab(tabMap[firstErrorField]);
+    }
+  };
+
   const [programs, setPrograms] = useState<{value: string, label: string}[]>([]);
   const [classGroups, setClassGroups] = useState<{value: string, label: string}[]>([]);
 
@@ -174,8 +214,8 @@ const UpdateStudentForm = ({ student, onSuccess, onCancel }: UpdateStudentFormPr
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
-      <Tabs.Root defaultValue="user" variant="enclosed" colorPalette="blue">
+    <form onSubmit={handleSubmit(onSubmit, onError)} className="flex flex-col gap-6" noValidate>
+      <Tabs.Root value={activeTab} onValueChange={(e) => setActiveTab(e.value)} variant="enclosed" colorPalette="blue">
         <Tabs.List>
           <Tabs.Trigger value="user">User Details</Tabs.Trigger>
           <Tabs.Trigger value="academic">Academic Profile</Tabs.Trigger>
@@ -240,7 +280,7 @@ const UpdateStudentForm = ({ student, onSuccess, onCancel }: UpdateStudentFormPr
                 error={errors.phone?.message}
               />
               <Select
-                label={t("student.gender") || "Gender"}
+                label={t("student.gender")}
                 {...register('gender')}
                 error={errors.gender?.message as string}
                 options={[
@@ -248,6 +288,7 @@ const UpdateStudentForm = ({ student, onSuccess, onCancel }: UpdateStudentFormPr
                   { value: 'MALE', label: t("student.gender_enum.MALE") || 'Male' },
                   { value: 'FEMALE', label: t("student.gender_enum.FEMALE") || 'Female' },
                 ]}
+                required
               />
               <Input
                 label={t("student.nationality")}
@@ -264,7 +305,7 @@ const UpdateStudentForm = ({ student, onSuccess, onCancel }: UpdateStudentFormPr
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-4">
               <Input
-                label={t("student.national_id")}
+                label={t('student.national_id', 'National ID')}
                 placeholder="Enter national ID"
                 {...register('nationalId')}
                 error={errors.nationalId?.message}

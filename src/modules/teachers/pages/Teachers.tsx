@@ -85,18 +85,20 @@ const Teachers = () => {
         </div>
       </div>
 
-      <TeachersGrid 
-        trigger={refreshTrigger}
-        onEditTeacher={(teacher) => setEditingTeacher(teacher)}
-        onViewTeacher={(teacher) => setViewingTeacher(teacher)}
-        onToggleActivation={(userId, currentStatus) => {
-          if (currentStatus) {
-            handleDeactivate(userId);
-          } else {
-            handleReactivate(userId);
-          }
-        }}
-      />
+      <div className="w-full overflow-x-auto pb-4">
+        <TeachersGrid 
+          trigger={refreshTrigger}
+          onEditTeacher={(teacher) => setEditingTeacher(teacher)}
+          onViewTeacher={(teacher) => setViewingTeacher(teacher)}
+          onToggleActivation={(userId, currentStatus) => {
+            if (currentStatus) {
+              handleDeactivate(userId);
+            } else {
+              handleReactivate(userId);
+            }
+          }}
+        />
+      </div>
 
       <TeacherProfileDialog
         open={!!viewingTeacher}

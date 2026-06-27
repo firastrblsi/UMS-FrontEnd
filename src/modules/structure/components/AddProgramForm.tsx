@@ -15,7 +15,7 @@ const programSchema = z.object({
   name: z.string().min(2, 'Program name is required'),
   code: z.string().min(1, 'Code is required'),
   description: z.string().optional(),
-  degreeType: z.enum(['BACHELOR', 'MASTER', 'PHD']),
+  degreeType: z.enum(['BACHELOR', 'MASTER', 'DIPLOMA', 'CERTIFICATE']),
   departmentId: z.string().min(1, 'Department is required'),
   totalCredits: z.coerce.number().int().min(1, 'Total credits must be positive'),
   numberOfSemesters: z.coerce.number().int().min(1, 'Number of semesters must be positive'),
@@ -105,7 +105,8 @@ const AddProgramForm = ({ onSuccess, onCancel }: AddProgramFormProps) => {
           options={[
             { value: 'BACHELOR', label: t("labels.bachelor") },
             { value: 'MASTER', label: t("labels.master") },
-            { value: 'PHD', label: t("labels.phd") },
+            { value: 'DIPLOMA', label: t("labels.diploma") || "Diploma" },
+            { value: 'CERTIFICATE', label: t("labels.certificate") || "Certificate" },
           ]}
           required
         />

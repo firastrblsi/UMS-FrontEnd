@@ -83,18 +83,20 @@ const Students = () => {
 
 
 
-      <StudentsGrid 
-        trigger={refreshTrigger}
-        onEditStudent={(student) => setEditingStudent(student)}
-        onViewStudent={(student) => setViewingStudent(student)}
-        onToggleActivation={(userId, currentStatus) => {
-          if (currentStatus) {
-            handleDeactivate(userId);
-          } else {
-            handleReactivate(userId);
-          }
-        }}
-      />
+      <div className="w-full overflow-x-auto pb-4">
+        <StudentsGrid 
+          trigger={refreshTrigger}
+          onEditStudent={(student) => setEditingStudent(student)}
+          onViewStudent={(student) => setViewingStudent(student)}
+          onToggleActivation={(userId, currentStatus) => {
+            if (currentStatus) {
+              handleDeactivate(userId);
+            } else {
+              handleReactivate(userId);
+            }
+          }}
+        />
+      </div>
 
       <StudentProfileDialog
         open={!!viewingStudent}
