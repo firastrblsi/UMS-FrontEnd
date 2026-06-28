@@ -14,7 +14,7 @@ const ProgramsFilterForm = ({ onFilter }: ProgramsFilterFormProps) => {
   const { options: departmentOptions, isLoading: deptsLoading } = useDepartmentOptions();
 
   const [departmentId, setDepartmentId] = useState("");
-  const [degreeType, setDegreeType] = useState<"BACHELOR" | "MASTER" | "PHD" | "">("");
+  const [degreeType, setDegreeType] = useState<"BACHELOR" | "MASTER" | "DIPLOMA" | "CERTIFICATE" | "">("");
   const [isActive, setIsActive] = useState<"true" | "false" | "">("");
 
   const handleSubmit = () => {
@@ -64,7 +64,8 @@ const ProgramsFilterForm = ({ onFilter }: ProgramsFilterFormProps) => {
           options={[
             { value: "BACHELOR", label: "Bachelor" },
             { value: "MASTER", label: "Master" },
-            { value: "PHD", label: "PhD" },
+            { value: "DIPLOMA", label: "Diploma" },
+            { value: "CERTIFICATE", label: "Certificate" },
           ]}
           onChange={(e) => setDegreeType(e.target.value as typeof degreeType)}
         />
