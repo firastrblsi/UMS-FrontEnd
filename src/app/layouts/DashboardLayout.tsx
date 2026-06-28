@@ -11,7 +11,7 @@ const DashboardLayout = () => {
     <div className="flex  gap-2 p-2 bg-gray-100 h-screen w-screen overflow-hidden ">
       <Sidebar />
       <div
-        className={`${isCollapsed ? "" : "md:flex hidden"} w-full flex flex-col gap-2`}
+        className={`${isCollapsed ? "" : "md:flex hidden"} flex-1 min-w-0 flex flex-col gap-2`}
       >
         <Navbar />
         <div className="border flex-1 bg-white overflow-auto rounded-2xl p-9">

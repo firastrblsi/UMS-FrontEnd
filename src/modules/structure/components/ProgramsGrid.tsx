@@ -130,7 +130,8 @@ export function ProgramsGrid({ externalFilters, trigger, onEditProgram }: Progra
         filterSelectOptions: [
           { value: 'BACHELOR', label: 'BACHELOR' },
           { value: 'MASTER', label: 'MASTER' },
-          { value: 'PHD', label: 'PHD' },
+          { value: 'DIPLOMA', label: 'Diploma' },
+          { value: 'CERTIFICATE', label: 'Certificate' },
         ],
         muiTableHeadCellProps: { align: "center" },
         muiTableBodyCellProps: { align: "center" },

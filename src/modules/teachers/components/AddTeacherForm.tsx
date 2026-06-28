@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
-import { Tabs } from '@chakra-ui/react';
+import Stepper from '@/shared/ui/Stepper';
 import { Button } from '@/shared/ui/Button';
 import Input from '@/shared/ui/Input';
 import Select from '@/shared/ui/Select';
@@ -17,8 +17,8 @@ const teacherSchema = z.object({
   firstName: z.string().min(2, 'First name is required'),
   lastName: z.string().min(2, 'Last name is required'),
   phone: z.string().optional(),
-  gender: z.enum(['MALE', 'FEMALE']).optional().or(z.literal('')),
-  nationality: z.string().optional(),
+  gender: z.string().min(1, 'Gender is required'),
+  nationality: z.string().min(2, 'Nationality is required'),
   employeeId: z.string().optional(),
   title: z.any().optional(),
   departmentId: z.string().min(1, 'Department is required'),
@@ -48,7 +48,14 @@ const AddTeacherForm = ({ onSuccess, onCancel }: AddTeacherFormProps) => {
   const [departments, setDepartments] = useState<{value: string; label: string}[]>([]);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [currentStep, setCurrentStep] = useState(0);
 
+  const steps = [
+    { label: 'User Details', fields: ['firstName', 'lastName', 'email', 'phone', 'gender', 'nationality', 'bio'] as const },
+    { label: 'Professional', fields: ['title', 'departmentId', 'specialization', 'professionalEmail'] as const },
+    { label: 'Education & Contract', fields: ['highestDegree', 'degreeField', 'degreeInstitution', 'contractType', 'hireDate', 'endDate'] as const },
+    { label: 'Office Info', fields: ['officeRoom', 'officeHours'] as const },
+  ];
   useEffect(() => {
     departmentApi.getDepartments({ take: 100 })
       .then(res => {
@@ -68,11 +75,12 @@ const AddTeacherForm = ({ onSuccess, onCancel }: AddTeacherFormProps) => {
   const {
     register,
     handleSubmit,
+    trigger,
     formState: { errors },
   } = useForm<TeacherFormValues>({
     resolver: zodResolver(teacherSchema),
     defaultValues: {
-      contractType: 'FULL_TIME',
+      contractType: '',
     },
   });
 
@@ -106,18 +114,26 @@ const AddTeacherForm = ({ onSuccess, onCancel }: AddTeacherFormProps) => {
       setIsSubmitting(false);
     }
   };
+  const handleNext = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    const fields = steps[currentStep].fields;
+    const isStepValid = await trigger(fields as unknown as (keyof TeacherFormValues)[]);
+    if (isStepValid) {
+      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
+    }
+  };
+
+  const handleBack = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setCurrentStep(prev => Math.max(prev - 1, 0));
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
-      <Tabs.Root defaultValue="user" variant="enclosed" colorPalette="blue">
-        <Tabs.List>
-          <Tabs.Trigger value="user">User Details</Tabs.Trigger>
-          <Tabs.Trigger value="professional">Professional</Tabs.Trigger>
-          <Tabs.Trigger value="education">Education & Contract</Tabs.Trigger>
-          <Tabs.Trigger value="office">Office Info</Tabs.Trigger>
-        </Tabs.List>
+      <Stepper steps={steps} currentStep={currentStep} />
 
-        <Tabs.Content value="user" className="pt-4">
+      {currentStep === 0 && (
+        <div className="pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2 items-center">
@@ -198,9 +214,11 @@ const AddTeacherForm = ({ onSuccess, onCancel }: AddTeacherFormProps) => {
               />
             </div>
           </div>
-        </Tabs.Content>
+        </div>
+      )}
 
-        <Tabs.Content value="professional" className="pt-4">
+      {currentStep === 1 && (
+        <div className="pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-4">
               <Select
@@ -240,9 +258,11 @@ const AddTeacherForm = ({ onSuccess, onCancel }: AddTeacherFormProps) => {
               />
             </div>
           </div>
-        </Tabs.Content>
+        </div>
+      )}
 
-        <Tabs.Content value="education" className="pt-4">
+      {currentStep === 2 && (
+        <div className="pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-4">
               <Select
@@ -301,9 +321,11 @@ const AddTeacherForm = ({ onSuccess, onCancel }: AddTeacherFormProps) => {
               </div>
             </div>
           </div>
-        </Tabs.Content>
+        </div>
+      )}
 
-        <Tabs.Content value="office" className="pt-4">
+      {currentStep === 3 && (
+        <div className="pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-4">
               <Input
@@ -320,11 +342,11 @@ const AddTeacherForm = ({ onSuccess, onCancel }: AddTeacherFormProps) => {
               />
             </div>
           </div>
-        </Tabs.Content>
-      </Tabs.Root>
+        </div>
+      )}
 
       {/* Action Buttons */}
-      <div className="flex justify-end gap-3 pt-4 border-t mt-2">
+      <div className="flex justify-between items-center pt-4 border-t mt-2">
         <Button
           type="button"
           buttonType="secondary"
@@ -333,14 +355,39 @@ const AddTeacherForm = ({ onSuccess, onCancel }: AddTeacherFormProps) => {
         >
           {t("global.cancel") || "Cancel"}
         </Button>
-        <Button
-          type="submit"
-          buttonType="primary"
-          disabled={isSubmitting}
-          loading={isSubmitting}
-        >
-          {t("global.add_teacher") || "Add Teacher"}
-        </Button>
+        
+        <div className="flex gap-3">
+          {currentStep > 0 && (
+            <Button
+              type="button"
+              buttonType="secondary"
+              onClick={handleBack}
+              disabled={isSubmitting}
+            >
+              Back
+            </Button>
+          )}
+          
+          {currentStep < steps.length - 1 ? (
+            <Button
+              type="button"
+              buttonType="primary"
+              onClick={handleNext}
+              disabled={isSubmitting}
+            >
+              Next
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              buttonType="primary"
+              disabled={isSubmitting}
+              loading={isSubmitting}
+            >
+              {t("global.add_teacher") || "Add Teacher"}
+            </Button>
+          )}
+        </div>
       </div>
     </form>
   );
