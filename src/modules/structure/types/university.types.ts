@@ -5,7 +5,7 @@ export interface Program {
   name: string;
   code: string;
   description: string | null;
-  degreeType: 'BACHELOR' | 'MASTER' | 'PHD';
+  degreeType: 'BACHELOR' | 'MASTER' | 'DIPLOMA' | 'CERTIFICATE';
   departmentId: string;
   totalCredits: number;
   numberOfSemesters: number;

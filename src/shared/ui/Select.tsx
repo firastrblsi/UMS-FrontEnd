@@ -30,6 +30,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       height = "43px",
       borderRadius = "16px",
       error,
+      required,
       ...rest
     },
     ref,
@@ -37,7 +38,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const hasValue = value !== undefined && value !== "";
 
     return (
-      <Field.Root invalid={!!error}>
+      <Field.Root invalid={!!error} required={required}>
         {label && (
           <Field.Label>
             <span
@@ -45,6 +46,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             >
               {label}
             </span>
+            {required && <Field.RequiredIndicator />}
           </Field.Label>
         )}
 
