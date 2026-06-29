@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, RefreshCw, Library } from 'lucide-react';
+import { Plus, RefreshCw } from 'lucide-react';
 import { Button } from '@/shared/ui/Button';
 import { Dialog } from '@/shared/ui/Dialog';
 import { CurriculumsGrid } from '../components/CurriculumsGrid';
@@ -27,8 +27,7 @@ export default function Curriculums() {
   return (
     <div className="flex flex-col gap-10 md:gap-15">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-        <h1 className="text-2xl mb-3 md:mb-0 flex items-center gap-3">
-          <Library className="text-blue-600" />
+        <h1 className="text-2xl mb-3 md:mb-0">
           {t('routes.curriculums', 'Curriculums')}
         </h1>
         

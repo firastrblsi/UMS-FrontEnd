@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TeachingModulesGrid } from "../components/TeachingModulesGrid";
 import { Button } from "@/shared/ui/Button";
-import { Plus, RefreshCw, Book } from "lucide-react";
+import { Plus, RefreshCw } from "lucide-react";
 import { Dialog } from "@/shared/ui/Dialog";
 import AddTeachingModuleForm from "../components/AddTeachingModuleForm";
 import UpdateTeachingModuleForm from "../components/UpdateTeachingModuleForm";
@@ -23,9 +23,8 @@ const TeachingModules = () => {
   return (
     <div className="flex flex-col gap-10 md:gap-15">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-        <h1 className="text-2xl mb-3 md:mb-0 flex items-center gap-3">
-          <Book className="text-blue-600" />
-          {t("routes.teaching_modules", "Teaching Modules (UE)")}
+        <h1 className="text-2xl mb-3 md:mb-0">
+          {t("routes.teaching_modules", "Teaching Modules")}
         </h1>
         
         <div className="flex gap-2 justify-center">

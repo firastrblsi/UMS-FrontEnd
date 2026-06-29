@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CourseSectionsGrid } from "../components/CourseSectionsGrid";
 import { Button } from "@/shared/ui/Button";
-import { Plus, RefreshCw, FileText } from "lucide-react";
+import { Plus, RefreshCw } from "lucide-react";
 import { Dialog } from "@/shared/ui/Dialog";
 import { AddCourseSectionForm } from "../components/AddCourseSectionForm";
 import { UpdateCourseSectionForm } from "../components/UpdateCourseSectionForm";
@@ -30,8 +30,7 @@ export function CourseSections() {
   return (
     <div className="flex flex-col gap-10 md:gap-15">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-        <h1 className="text-2xl mb-3 md:mb-0 flex items-center gap-3">
-          <FileText className="text-blue-600" />
+        <h1 className="text-2xl mb-3 md:mb-0">
           {t("routes.course_sections", "Course Sections")}
         </h1>
         
