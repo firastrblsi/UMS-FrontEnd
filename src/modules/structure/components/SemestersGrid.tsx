@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { MRT_ColumnDef } from "material-react-table";
 import { DataTable } from "@/shared/ui/DataTable";
@@ -12,11 +12,19 @@ import { toaster } from "@/components/ui/toaster";
 interface SemestersGridProps {
   trigger?: number;
   onEditSemester?: (semester: Semester) => void;
+  externalFilters?: any;
 }
 
-export function SemestersGrid({ trigger, onEditSemester }: SemestersGridProps) {
+export function SemestersGrid({ trigger, onEditSemester, externalFilters }: SemestersGridProps) {
   const { t } = useTranslation();
-  const { data, rowCount, isLoading, isFetching, fetchSemesters } = useSemesters();
+  const { data, rowCount, isLoading, isFetching, fetchSemesters } = useSemesters(externalFilters || {});
+  const [academicYears, setAcademicYears] = useState<any[]>([]);
+
+  useEffect(() => {
+    import("../api/academicYearApi").then(({ academicYearApi }) => {
+      academicYearApi.getAcademicYears({ skip: 0, take: 100 }).then(res => setAcademicYears(res.data)).catch(console.error);
+    });
+  }, []);
 
   useEffect(() => {
     if (trigger && trigger > 0) {
@@ -53,6 +61,8 @@ export function SemestersGrid({ trigger, onEditSemester }: SemestersGridProps) {
       accessorKey: "academicYear.name",
       header: t("labels.academic_year", "Academic Year"),
       size: 150,
+      filterVariant: 'autocomplete',
+      filterSelectOptions: academicYears.map(y => ({ value: y.name, label: y.name })),
       muiTableHeadCellProps: { align: "center" },
       muiTableBodyCellProps: { align: "center" },
     },

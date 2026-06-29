@@ -92,7 +92,17 @@
     "exam_start_date": "Date de début des examens",
     "academic_year": "Année académique",
     "semester": "Semestre",
-    "date": "Date"
+    "date": "Date",
+    "module_name": "Nom de l'Unité d'Enseignement",
+    "course_name": "Nom de la Matière",
+    "coefficient": "Coefficient",
+    "lecture_hours": "Heures de Cours",
+    "tutorial_hours": "Heures de TD",
+    "practical_hours": "Heures de TP",
+    "credits": "Crédits",
+    "year_number": "Année",
+    "term_number": "Semestre",
+    "modules_count": "Total des UEs"
   },
   "teacher": {
     "first_name": "Prénom",
@@ -195,8 +205,18 @@
     "academic_years": "Années Académiques",
     "semesters": "Semestres",
     "class_groups": "Groupes de Classe",
-    "holidays": "Jours Fériés",
-    "my_profile": "Mon Profil"
+    "holidays": "Vacances",
+    "my_profile": "Mon Profil",
+    "teaching_modules": "Unités d'Enseignement (UE)",
+    "courses": "Matières (ECUE)",
+    "curriculums": "Curriculums",
+    "course_sections": "Sections de Cours",
+    "groups": {
+      "people": "Utilisateurs",
+      "curriculum": "Enseignement",
+      "structure": "Structure Académique",
+      "infrastructure": "Administration"
+    }
   },
   "global": {
     "sesame": "Université <highlight>SESAME</highlight>",
@@ -227,8 +247,34 @@
     "update_semester": "Mettre à jour le semestre",
     "add_class_group": "Ajouter un groupe de classe",
     "update_class_group": "Mettre à jour le groupe de classe",
-    "add_holiday": "Ajouter un jour férié",
-    "update_holiday": "Mettre à jour le jour férié"
+    "add_holiday": "Ajouter des vacances",
+    "update_holiday": "Mettre à jour les vacances",
+    "add_teaching_module": "Ajouter une UE",
+    "update_teaching_module": "Mettre à jour l'UE",
+    "add_course": "Ajouter une ECUE",
+    "update_course": "Mettre à jour l'ECUE",
+    "add_curriculum": "Ajouter un Curriculum",
+    "update_curriculum": "Mettre à jour le Curriculum"
+  },
+  "enrollments": {
+    "manage_students": "Gérer les étudiants",
+    "manage_students_title": "Gestion des inscriptions",
+    "enrolled_students": "Étudiants inscrits",
+    "add_students": "Ajouter des étudiants",
+    "no_students": "Aucun étudiant n'est encore inscrit.",
+    "total_enrolled": "Total des inscrits",
+    "unenroll": "Désinscrire",
+    "confirm_unenroll": "Êtes-vous sûr de vouloir désinscrire cet étudiant ?",
+    "bulk_enroll": "Inscription en masse (Groupe)",
+    "bulk_enroll_desc": "Inscrire automatiquement tous les étudiants appartenant au groupe de classe assigné à cette section.",
+    "no_class_group": "Aucun groupe de classe n'est assigné à cette section.",
+    "enroll_all": "Inscrire tout le groupe",
+    "confirm_bulk_enroll": "Inscrire tous les étudiants de ce groupe de classe ?",
+    "individual_enroll": "Inscription individuelle",
+    "individual_enroll_desc": "Rechercher et inscrire un étudiant spécifique par nom ou matricule.",
+    "search_student": "Rechercher un étudiant",
+    "search_placeholder": "Taper pour rechercher...",
+    "enroll_success": "Étudiant inscrit avec succès"
   },
   "dialog": {
     "confirm_close_title": "Abandonner les modifications ?",

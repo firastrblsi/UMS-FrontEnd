@@ -1,16 +1,20 @@
 import { useState, useCallback, useRef } from 'react';
 import type { FetchDataParams } from '@/shared/ui/DataTable';
-import { classGroupApi } from '../api/classGroupApi';
-import type { ClassGroup } from '../api/classGroupApi';
+import type { Course } from '../types/university.types';
+import type { CourseListParams } from '../api/courseApi';
+import { courseApi } from '../api/courseApi';
 
-export function useClassGroups(externalFilters?: any) {
-  const [data, setData] = useState<ClassGroup[]>([]);
+export function useCourses(externalFilters: CourseListParams = {}) {
+  const [data, setData] = useState<Course[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const isFirstFetch = useRef(true);
 
-  const fetchClassGroups = useCallback(async (params: FetchDataParams) => {
+  const filtersRef = useRef(externalFilters);
+  filtersRef.current = externalFilters;
+
+  const fetchCourses = useCallback(async (params: FetchDataParams) => {
     if (isFirstFetch.current) {
       setIsLoading(true);
     } else {
@@ -20,15 +24,15 @@ export function useClassGroups(externalFilters?: any) {
     try {
       const search = params.globalFilter?.trim();
       const filters = params.columnFilters?.length ? JSON.stringify(params.columnFilters) : undefined;
-      const result = await classGroupApi.getClassGroups({
+      const result = await courseApi.getCourses({
         skip: params.page * params.pageSize,
         take: params.pageSize,
         ...(search ? { search } : {}),
+        ...filtersRef.current,
         ...(filters ? { filters } : {}),
-        ...(params.sorting[0]
+        ...(params.sorting?.[0]
           ? { sort: params.sorting[0].id, order: params.sorting[0].desc ? 'desc' : 'asc' }
           : {}),
-        ...externalFilters,
       });
       setData(result.data);
       setRowCount(result.total);
@@ -42,5 +46,5 @@ export function useClassGroups(externalFilters?: any) {
     }
   }, []);
 
-  return { data, rowCount, isLoading, isFetching, fetchClassGroups };
+  return { data, rowCount, isLoading, isFetching, fetchCourses };
 }

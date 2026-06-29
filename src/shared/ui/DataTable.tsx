@@ -220,7 +220,7 @@ export function DataTable<TData extends Record<string, any>>({
   initialPageSize = 10,
   pageSizeOptions = [5, 10, 20, 50],
   enableGlobalFilter = true,
-  enableColumnFilters = false,
+  enableColumnFilters = true,
   enableTopToolbar = true,
   enableHiding = false,
   initialState,
