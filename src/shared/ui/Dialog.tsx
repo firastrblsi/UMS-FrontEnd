@@ -9,6 +9,7 @@ interface DialogProps {
   title: string;
   children: ReactNode;
   size?: "sm" | "md" | "lg" | "xl" | "full";
+  bodyOverflow?: "auto" | "visible" | "hidden";
 }
 
 export function Dialog({
@@ -17,6 +18,7 @@ export function Dialog({
   title,
   children,
   size = "md",
+  bodyOverflow = "auto",
 }: DialogProps) {
   const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
@@ -36,7 +38,8 @@ export function Dialog({
         onOpenChange={(e) => !e.open && handleCloseAttempt()}
         size={size}
         motionPreset="slide-in-bottom"
-        closeOnInteractOutside={false} // ← prevent closing by clicking outside
+        closeOnInteractOutside={false}
+        trapFocus={false}
       >
         <ChakraDialog.Backdrop />
         <ChakraDialog.Positioner>
@@ -73,7 +76,7 @@ export function Dialog({
             </ChakraDialog.Header>
 
             {/* Body */}
-            <ChakraDialog.Body px={6} py={5} overflowY="auto" maxH="75vh">
+            <ChakraDialog.Body px={6} py={5} overflowY={bodyOverflow} maxH="75vh">
               {children}
             </ChakraDialog.Body>
           </ChakraDialog.Content>
@@ -86,6 +89,7 @@ export function Dialog({
         onOpenChange={(e) => !e.open && handleCancelClose()}
         size="sm"
         motionPreset="scale"
+        trapFocus={false}
       >
         <ChakraDialog.Backdrop />
         <ChakraDialog.Positioner>

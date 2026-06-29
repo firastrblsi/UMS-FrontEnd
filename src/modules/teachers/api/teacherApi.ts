@@ -61,30 +61,36 @@ class TeacherApi extends BaseApi {
     const userRes = await axiosInstance.post('/users', userPayload);
     const userId = userRes.data.id;
 
-    if (data.profilePictureFile) {
-      await this.uploadProfilePicture(userId, data.profilePictureFile);
+    try {
+      if (data.profilePictureFile) {
+        await this.uploadProfilePicture(userId, data.profilePictureFile);
+      }
+
+      // 2. Create Profile
+      const profilePayload = {
+        userId,
+        employeeId: data.employeeId,
+        title: data.title,
+        departmentId: data.departmentId,
+        specialization: data.specialization,
+        highestDegree: data.highestDegree,
+        degreeField: data.degreeField,
+        degreeInstitution: data.degreeInstitution,
+        contractType: data.contractType,
+        hireDate: data.hireDate ? (data.hireDate.includes('T') ? data.hireDate : `${data.hireDate}T00:00:00Z`) : data.hireDate,
+        endDate: data.endDate ? (data.endDate.includes('T') ? data.endDate : `${data.endDate}T00:00:00Z`) : data.endDate,
+        officeRoom: data.officeRoom,
+        officeHours: data.officeHours,
+        professionalEmail: data.professionalEmail,
+        bio: data.bio,
+      };
+
+      await axiosInstance.post('/teacher-profiles', profilePayload);
+    } catch (error) {
+      // Rollback: Delete the created user if profile creation fails
+      await axiosInstance.delete(`/users/${userId}`);
+      throw error;
     }
-
-    // 2. Create Profile
-    const profilePayload = {
-      userId,
-      employeeId: data.employeeId,
-      title: data.title,
-      departmentId: data.departmentId,
-      specialization: data.specialization,
-      highestDegree: data.highestDegree,
-      degreeField: data.degreeField,
-      degreeInstitution: data.degreeInstitution,
-      contractType: data.contractType,
-      hireDate: data.hireDate ? (data.hireDate.includes('T') ? data.hireDate : `${data.hireDate}T00:00:00Z`) : data.hireDate,
-      endDate: data.endDate ? (data.endDate.includes('T') ? data.endDate : `${data.endDate}T00:00:00Z`) : data.endDate,
-      officeRoom: data.officeRoom,
-      officeHours: data.officeHours,
-      professionalEmail: data.professionalEmail,
-      bio: data.bio,
-    };
-
-    await axiosInstance.post('/teacher-profiles', profilePayload);
   }
 
   async updateTeacher(profileId: string, userId: string, data: UpdateTeacherPayload): Promise<void> {

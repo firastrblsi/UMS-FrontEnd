@@ -25,6 +25,10 @@ import AcademicYears from "@/modules/structure/pages/AcademicYears";
 import Semesters from "@/modules/structure/pages/Semesters";
 import ClassGroups from "@/modules/structure/pages/ClassGroups";
 import Holidays from "@/modules/structure/pages/Holidays";
+import TeachingModules from "@/modules/structure/pages/TeachingModules";
+import Courses from "@/modules/structure/pages/Courses";
+import { CourseSections } from "@/modules/structure/pages/CourseSections";
+import Curriculums from "@/modules/structure/pages/Curriculums";
 import Settings from "@/modules/dashboard/pages/Settings";
 import MyProfile from "@/modules/profile/pages/MyProfile";
 
@@ -115,9 +119,11 @@ export function AppRouter() {
                     }
                   />
                   <Route
-                    path="/courses"
-                    element={<div className="p-8">Courses — Sprint 2</div>}
+                    path="/courses-sections"
+                    element={<CourseSections />}
                   />
+                  <Route path="/teaching-modules" element={<TeachingModules />} />
+                  <Route path="/courses" element={<Courses />} />
                   <Route path="/departments" element={<Departments />} />
                   <Route path="/programs" element={<Programs />} />
                   <Route path="/rooms" element={<Rooms />} />
@@ -125,6 +131,7 @@ export function AppRouter() {
                   <Route path="/semesters" element={<Semesters />} />
                   <Route path="/class-groups" element={<ClassGroups />} />
                   <Route path="/holidays" element={<Holidays />} />
+                  <Route path="/curriculums" element={<Curriculums />} />
                   <Route
                     path="/finance"
                     element={<div className="p-8">Finance — Sprint 4</div>}

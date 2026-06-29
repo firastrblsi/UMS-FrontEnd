@@ -91,7 +91,17 @@
     "exam_start_date": "Exam Start Date",
     "academic_year": "Academic Year",
     "semester": "Semester",
-    "date": "Date"
+    "date": "Date",
+    "module_name": "Module Name",
+    "course_name": "Course Name",
+    "coefficient": "Coefficient",
+    "lecture_hours": "Lecture Hours",
+    "tutorial_hours": "Tutorial Hours",
+    "practical_hours": "Practical Hours",
+    "credits": "Credits",
+    "year_number": "Year Number",
+    "term_number": "Term/Semester",
+    "modules_count": "Total Modules"
   },
   "teacher": {
     "first_name": "First Name",
@@ -198,7 +208,17 @@
     "semesters": "Semesters",
     "class_groups": "Class Groups",
     "holidays": "Holidays",
-    "my_profile": "My Profile"
+    "my_profile": "My Profile",
+    "teaching_modules": "Teaching Modules",
+    "courses": "Courses",
+    "curriculums": "Curriculums",
+    "course_sections": "Course Sections",
+    "groups": {
+      "people": "People",
+      "curriculum": "Curriculum",
+      "structure": "Academic Structure",
+      "infrastructure": "Infrastructure"
+    }
   },
   "global": {
     "sesame": "<highlight>SESAME</highlight> University",
@@ -230,7 +250,33 @@
     "add_class_group": "Add Class Group",
     "update_class_group": "Update Class Group",
     "add_holiday": "Add Holiday",
-    "update_holiday": "Update Holiday"
+    "update_holiday": "Update Holiday",
+    "add_teaching_module": "Add Teaching Module",
+    "update_teaching_module": "Update Teaching Module",
+    "add_course": "Add Course",
+    "update_course": "Update Course",
+    "add_curriculum": "Add Curriculum",
+    "update_curriculum": "Update Curriculum"
+  },
+  "enrollments": {
+    "manage_students": "Manage Students",
+    "manage_students_title": "Manage Student Enrollments",
+    "enrolled_students": "Enrolled Students",
+    "add_students": "Add Students",
+    "no_students": "No students enrolled yet.",
+    "total_enrolled": "Total Enrolled",
+    "unenroll": "Unenroll",
+    "confirm_unenroll": "Are you sure you want to unenroll this student?",
+    "bulk_enroll": "Bulk Enroll Class Group",
+    "bulk_enroll_desc": "Automatically enroll all students belonging to this section's designated class group.",
+    "no_class_group": "This section has no class group assigned.",
+    "enroll_all": "Enroll All",
+    "confirm_bulk_enroll": "Enroll all students from the assigned class group?",
+    "individual_enroll": "Enroll Individual Student",
+    "individual_enroll_desc": "Search and enroll a specific student by name or matricule number.",
+    "search_student": "Search Student",
+    "search_placeholder": "Type to search...",
+    "enroll_success": "Student enrolled successfully"
   },
   "dialog": {
     "confirm_close_title": "Discard changes?",

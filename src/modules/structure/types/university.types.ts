@@ -67,3 +67,64 @@ export interface Holiday {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface TeachingModule {
+  id: string;
+  name: string;
+  code: string;
+  description: string | null;
+  departmentId: string;
+  department?: { id: string; name: string };
+  coefficient: number;
+  totalCredits: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Course {
+  id: string;
+  name: string;
+  code: string;
+  description: string | null;
+  teachingModuleId: string;
+  teachingModule?: TeachingModule;
+  credits: number;
+  coefficient: number;
+  lectureHours: number;
+  tutorialHours: number;
+  practicalHours: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CurriculumModule {
+  id: string;
+  curriculumId: string;
+  teachingModuleId: string;
+  isMandatory: boolean;
+  teachingModule?: TeachingModule;
+}
+
+export interface Curriculum {
+  id: string;
+  programId: string;
+  yearNumber: number;
+  termNumber: number;
+  program?: Program;
+  modules?: CurriculumModule[];
+}
+export interface CourseSection {
+  id: string;
+  courseId: string;
+  semesterId: string;
+  classGroupId: string;
+  teacherId?: string;
+
+  course?: Course;
+  semester?: Semester;
+  classGroup?: ClassGroup;
+  // teacher?: TeacherProfile; // We might not have TeacherProfile defined yet, use any or add it if needed
+  teacher?: any;
+}
