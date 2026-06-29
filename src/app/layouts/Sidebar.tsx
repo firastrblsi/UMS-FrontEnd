@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useRef } from "react";
 import Logo from "../../assets/sesame-logo-min.png";
 import sesame from "../../assets/logo-sesame.png";
 import {
@@ -8,6 +9,7 @@ import {
   LogOut,
   ChevronRight,
   ChevronLeft,
+  ChevronDown,
   Landmark,
   BookOpen,
   Building,
@@ -15,9 +17,12 @@ import {
   Calendar,
   CalendarDays,
   Layers,
-  CalendarRange
+  CalendarRange,
+  Book,
+  FileText,
+  Library
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useAppDispatch } from "@/core/hooks/useAppDispatch";
 import { useAppSelector } from "@/core/hooks/useAppSelector";
 import { selectSidebarCollapsed } from "@/core/store/selectors/uiSelectors";
@@ -28,10 +33,11 @@ import { selectUser } from "@/modules/auth/redux/authSelectors";
 import { logout } from "@/modules/auth/redux/authSlice";
 
 interface NavItem {
-  to: string;
+  to?: string;
   icon: React.ElementType;
   labelKey: string;
   roles: Role[];
+  children?: NavItem[];
 }
 
 const NAV_ITEMS: NavItem[] = [
@@ -42,58 +48,45 @@ const NAV_ITEMS: NavItem[] = [
     roles: ["ADMIN", "TEACHER", "STUDENT"],
   },
   {
-    to: "/students",
     icon: Users,
-    labelKey: "routes.students",
+    labelKey: "routes.groups.people",
     roles: ["ADMIN"],
+    children: [
+      { to: "/students", icon: Users, labelKey: "routes.students", roles: ["ADMIN"] },
+      { to: "/teachers", icon: GraduationCap, labelKey: "routes.teachers", roles: ["ADMIN"] },
+    ]
   },
   {
-    to: "/teachers",
-    icon: GraduationCap,
-    labelKey: "routes.teachers",
-    roles: ["ADMIN"],
-  },
-  {
-    to: "/departments",
-    icon: Landmark,
-    labelKey: "routes.departments",
-    roles: ["ADMIN"],
-  },
-  {
-    to: "/programs",
     icon: BookOpen,
-    labelKey: "routes.programs",
+    labelKey: "routes.groups.curriculum",
     roles: ["ADMIN"],
+    children: [
+      { to: "/programs", icon: BookOpen, labelKey: "routes.programs", roles: ["ADMIN"] },
+      { to: "/curriculums", icon: Library, labelKey: "routes.curriculums", roles: ["ADMIN"] },
+      { to: "/teaching-modules", icon: Book, labelKey: "routes.teaching_modules", roles: ["ADMIN"] },
+      { to: "/courses", icon: FileText, labelKey: "routes.courses", roles: ["ADMIN"] },
+      { to: "/courses-sections", icon: FileText, labelKey: "routes.course_sections", roles: ["ADMIN"] },
+    ]
   },
   {
-    to: "/rooms",
-    icon: Building,
-    labelKey: "routes.rooms",
-    roles: ["ADMIN"],
-  },
-  {
-    to: "/academic-years",
-    icon: Calendar,
-    labelKey: "routes.academic_years",
-    roles: ["ADMIN"],
-  },
-  {
-    to: "/semesters",
-    icon: CalendarRange,
-    labelKey: "routes.semesters",
-    roles: ["ADMIN"],
-  },
-  {
-    to: "/class-groups",
     icon: Layers,
-    labelKey: "routes.class_groups",
+    labelKey: "routes.groups.structure",
     roles: ["ADMIN"],
+    children: [
+      { to: "/academic-years", icon: Calendar, labelKey: "routes.academic_years", roles: ["ADMIN"] },
+      { to: "/semesters", icon: CalendarRange, labelKey: "routes.semesters", roles: ["ADMIN"] },
+      { to: "/class-groups", icon: Layers, labelKey: "routes.class_groups", roles: ["ADMIN"] },
+      { to: "/holidays", icon: CalendarDays, labelKey: "routes.holidays", roles: ["ADMIN"] },
+    ]
   },
   {
-    to: "/holidays",
-    icon: CalendarDays,
-    labelKey: "routes.holidays",
+    icon: Building,
+    labelKey: "routes.groups.infrastructure",
     roles: ["ADMIN"],
+    children: [
+      { to: "/departments", icon: Landmark, labelKey: "routes.departments", roles: ["ADMIN"] },
+      { to: "/rooms", icon: Building, labelKey: "routes.rooms", roles: ["ADMIN"] },
+    ]
   },
   {
     to: "/profile",
@@ -102,6 +95,118 @@ const NAV_ITEMS: NavItem[] = [
     roles: ["TEACHER", "STUDENT", "ADMIN"],
   },
 ];
+
+const NavGroup = ({ item, isCollapsed, t, role }: any) => {
+  const { pathname } = useLocation();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showFlyout, setShowFlyout] = useState(false);
+  const flyoutRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (item.children?.some((child: NavItem) => child.to && pathname.startsWith(child.to))) {
+      setIsExpanded(true);
+    }
+  }, [pathname, item.children]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: PointerEvent) => {
+      if (flyoutRef.current && !flyoutRef.current.contains(e.target as Node)) {
+        setShowFlyout(false);
+      }
+    };
+    if (showFlyout) {
+      document.addEventListener("pointerdown", handleClickOutside);
+    }
+    return () => document.removeEventListener("pointerdown", handleClickOutside);
+  }, [showFlyout]);
+
+  const visibleChildren = item.children?.filter((child: NavItem) => role && child.roles.includes(role)) || [];
+  if (visibleChildren.length === 0) return null;
+
+  const isActive = item.children?.some((child: NavItem) => child.to && pathname.startsWith(child.to));
+
+  return (
+    <li className="flex flex-col w-full relative items-center">
+      <div
+        className={`flex items-center cursor-pointer h-10 transition-colors ${
+          isCollapsed
+            ? "w-10 rounded-full justify-center"
+            : "w-56 rounded-lg ps-5"
+        } ${isActive ? "active-route" : "text-black bg-gray-100 hover:bg-gray-200"}`}
+        onClick={() => {
+          if (isCollapsed) {
+            setShowFlyout(!showFlyout);
+          } else {
+            setIsExpanded(!isExpanded);
+          }
+        }}
+      >
+        <item.icon size={15} />
+        {!isCollapsed && (
+          <>
+            <span className="text-sm ms-4 flex-1 select-none">{t(item.labelKey)}</span>
+            <ChevronDown size={14} className={`mr-4 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+          </>
+        )}
+      </div>
+
+      {/* Expanded Accordion (only when not collapsed) */}
+      {!isCollapsed && (
+        <div className={`overflow-hidden transition-all duration-300 w-full flex justify-center ${isExpanded ? "max-h-[500px] opacity-100 mt-2" : "max-h-0 opacity-0"}`}>
+          <ul className="flex flex-col gap-2 w-56">
+            {visibleChildren.map((child: NavItem) => (
+              <li key={child.to} className="w-full">
+                <NavLink
+                  to={child.to!}
+                  title={t(child.labelKey)}
+                  className={({ isActive: childActive }) =>
+                    `flex items-center h-10 w-full rounded-lg ps-9 text-sm transition-colors ${
+                      childActive ? "text-blue-600 bg-blue-50 font-medium" : "text-gray-600 hover:bg-gray-100"
+                    }`
+                  }
+                >
+                  <child.icon size={14} className="mr-3" />
+                  {t(child.labelKey)}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Hover/Click Flyout (only when collapsed) */}
+      {isCollapsed && showFlyout && (
+        <div 
+          ref={flyoutRef}
+          className="absolute left-[64px] top-0 w-56 bg-white shadow-xl rounded-xl border border-gray-100 py-3 z-50 animate-in fade-in slide-in-from-left-2"
+        >
+          <div className="px-4 py-2 border-b border-gray-50 mb-2">
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{t(item.labelKey)}</span>
+          </div>
+          <ul className="flex flex-col gap-2 px-3">
+            {visibleChildren.map((child: NavItem) => (
+              <li key={child.to} className="w-full">
+                <NavLink
+                  to={child.to!}
+                  title={t(child.labelKey)}
+                  onClick={() => setShowFlyout(false)}
+                  className={({ isActive: childActive }) =>
+                    `flex items-center h-10 w-full rounded-lg px-3 text-sm transition-colors ${
+                      childActive ? "bg-blue-50 text-blue-600 font-medium" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    }`
+                  }
+                >
+                  <child.icon size={14} className="mr-3" />
+                  <span className="truncate">{t(child.labelKey)}</span>
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </li>
+  );
+};
 
 const Sidebar = () => {
   const { t } = useTranslation();
@@ -122,9 +227,10 @@ const Sidebar = () => {
     } ${
       isActive ? "active-route" : "text-black bg-gray-100 hover:bg-gray-200"
     }`;
+
   return (
     <div
-      className={`border transition-all duration-300 ease-in-out relative py-6 rounded-2xl bg-white flex-col justify-between items-center ${isCollapsed ? "md:w-23 md:flex hidden" : "md:w-70  flex"}`}
+      className={`border transition-all duration-300 ease-in-out relative z-50 py-6 rounded-2xl bg-white flex-col justify-between items-center ${isCollapsed ? "md:w-23 md:flex hidden" : "md:w-70  flex"}`}
     >
       {/* Symmetric Bridge SVG Notch */}
       <div className="absolute -right-[25px] top-1/2 -translate-y-1/2 hidden md:block pointer-events-none z-10">
@@ -154,51 +260,61 @@ const Sidebar = () => {
       <div className={`px-1 ${isCollapsed ? "w-[85%]" : "w-[75%]"}`}>
         <img src={isCollapsed ? Logo : sesame} alt="Logo" className="" />
       </div>
-      <div className="w-full">
+      <div className={`w-full scrollbar-hide ${isCollapsed ? "overflow-visible" : "overflow-y-auto overflow-x-hidden"}`}>
         <ul className="flex flex-col gap-3">
-          {visibleItems.map(({ to, icon: Icon, labelKey }) => (
-            <li
-              key={to}
-              className="flex justify-center gap-2 items-center w-full"
-            >
-              <NavLink
-                to={to}
-                title={t(labelKey)}
-                className={({ isActive }) => navLinkClass(isActive)}
+          {visibleItems.map((item) => (
+            item.children ? (
+              <NavGroup 
+                key={item.labelKey} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+                t={t} 
+                role={role} 
+              />
+            ) : (
+              <li
+                key={item.to}
+                className="flex justify-center gap-2 items-center w-full"
               >
-                <Icon size={15} />
-                {!isCollapsed && (
-                  <span className="text-sm ms-4">{t(labelKey)}</span>
-                )}
-              </NavLink>
-            </li>
+                <NavLink
+                  to={item.to!}
+                  title={t(item.labelKey)}
+                  className={({ isActive }) => navLinkClass(isActive)}
+                >
+                  <item.icon size={15} />
+                  {!isCollapsed && (
+                    <span className="text-sm ms-4">{t(item.labelKey)}</span>
+                  )}
+                </NavLink>
+              </li>
+            )
           ))}
         </ul>
       </div>
       <div className="mb-2 w-full">
-        <ul className="flex flex-col gap-3 ">
+        <ul className="flex flex-col gap-3">
           <li className="flex justify-center gap-2 items-center w-full">
             <NavLink
               to="/settings"
               title="settings"
               className={({ isActive }) =>
-                ` flex items-center   ${isCollapsed ? "w-10 rounded-full justify-center" : "w-56 rounded-lg ps-5"} h-10   transition-colors ${
+                `flex items-center ${isCollapsed ? "w-10 rounded-full justify-center" : "w-56 rounded-lg ps-5"} h-10 transition-colors ${
                   isActive
                     ? "active-route"
-                    : "text-black bg-gray-100 hover:bg-gray-200 "
+                    : "text-black bg-gray-100 hover:bg-gray-200"
                 }`
               }
             >
               <Settings size={15} />
               {!isCollapsed && (
-                <span className=" text-sm ms-4">{t("routes.settings")}</span>
+                <span className="text-sm ms-4">{t("routes.settings")}</span>
               )}
             </NavLink>
           </li>
           <li className="flex justify-center gap-2 items-center w-full">
             <span
               onClick={() => dispatch(logout())}
-              className={`flex items-center cursor-pointer  ${isCollapsed ? "w-10 rounded-full justify-center" : "w-56 rounded-lg ps-5"} h-10   transition-colors text-black bg-gray-100 hover:bg-gray-200`}
+              className={`flex items-center cursor-pointer ${isCollapsed ? "w-10 rounded-full justify-center" : "w-56 rounded-lg ps-5"} h-10 transition-colors text-black bg-gray-100 hover:bg-gray-200`}
             >
               <LogOut size={15} />
               {!isCollapsed && (

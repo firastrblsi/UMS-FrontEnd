@@ -72,34 +72,46 @@ class StudentApi extends BaseApi {
       await this.uploadProfilePicture(userId, data.profilePictureFile);
     }
 
-    // 2. Create Profile
-    const profilePayload = {
-      userId,
-      studentNumber: data.studentNumber,
-      programId: data.programId,
-      classGroupId: data.classGroupId,
-      nationalId: data.nationalId,
-      scholarshipType: data.scholarshipType,
-      status: data.status,
-      baccalaureateField: data.baccalaureateField,
-      baccalaureateGrade: data.baccalaureateGrade,
-      baccalaureateYear: data.baccalaureateYear ? Number(data.baccalaureateYear) : undefined,
-      currentYearNumber: data.currentYearNumber ? Number(data.currentYearNumber) : undefined,
-      enrollmentDate: data.enrollmentDate ? (data.enrollmentDate.includes('T') ? data.enrollmentDate : `${data.enrollmentDate}T00:00:00Z`) : data.enrollmentDate,
-      expectedGradDate: data.expectedGradDate ? (data.expectedGradDate.includes('T') ? data.expectedGradDate : `${data.expectedGradDate}T00:00:00Z`) : data.expectedGradDate,
-      actualGradDate: data.actualGradDate ? (data.actualGradDate.includes('T') ? data.actualGradDate : `${data.actualGradDate}T00:00:00Z`) : data.actualGradDate,
-      guardianName: data.guardianName,
-      guardianEmail: data.guardianEmail,
-      guardianPhone: data.guardianPhone,
-      guardianRelation: data.guardianRelation,
-      hasMedicalNeeds: data.hasMedicalNeeds,
-      medicalNotes: data.medicalNotes,
-      previousInstitution: data.previousInstitution,
-      transportMode: data.transportMode,
-    };
+    try {
+      // Optional: Upload Profile Picture if provided
+      if (data.profilePictureFile) {
+        await this.uploadProfilePicture(userId, data.profilePictureFile);
+      }
 
-    await axiosInstance.post('/student-profiles', profilePayload);
+      // 2. Create Profile
+      const profilePayload = {
+        userId,
+        studentNumber: data.studentNumber,
+        programId: data.programId,
+        classGroupId: data.classGroupId,
+        nationalId: data.nationalId,
+        scholarshipType: data.scholarshipType,
+        status: data.status,
+        baccalaureateField: data.baccalaureateField,
+        baccalaureateGrade: data.baccalaureateGrade,
+        baccalaureateYear: data.baccalaureateYear ? Number(data.baccalaureateYear) : undefined,
+        currentYearNumber: data.currentYearNumber ? Number(data.currentYearNumber) : undefined,
+        enrollmentDate: data.enrollmentDate ? (data.enrollmentDate.includes('T') ? data.enrollmentDate : `${data.enrollmentDate}T00:00:00Z`) : data.enrollmentDate,
+        expectedGradDate: data.expectedGradDate ? (data.expectedGradDate.includes('T') ? data.expectedGradDate : `${data.expectedGradDate}T00:00:00Z`) : data.expectedGradDate,
+        actualGradDate: data.actualGradDate ? (data.actualGradDate.includes('T') ? data.actualGradDate : `${data.actualGradDate}T00:00:00Z`) : data.actualGradDate,
+        guardianName: data.guardianName,
+        guardianEmail: data.guardianEmail,
+        guardianPhone: data.guardianPhone,
+        guardianRelation: data.guardianRelation,
+        hasMedicalNeeds: data.hasMedicalNeeds,
+        medicalNotes: data.medicalNotes,
+        previousInstitution: data.previousInstitution,
+        transportMode: data.transportMode,
+      };
+
+      await axiosInstance.post('/student-profiles', profilePayload);
+    } catch (error) {
+      // Rollback: Delete the created user if profile creation fails
+      await axiosInstance.delete(`/users/${userId}`);
+      throw error;
+    }
   }
+
   async updateStudent(profileId: string, userId: string, data: UpdateStudentPayload): Promise<void> {
     // 1. Update User Details
     if (data.email || data.firstName || data.lastName || data.phone || data.gender || data.nationality) {

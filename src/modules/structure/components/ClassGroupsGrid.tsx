@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { MRT_ColumnDef } from "material-react-table";
 import { DataTable } from "@/shared/ui/DataTable";
@@ -11,11 +11,23 @@ import { toaster } from "@/components/ui/toaster";
 interface ClassGroupsGridProps {
   trigger?: number;
   onEditClassGroup?: (classGroup: ClassGroup) => void;
+  externalFilters?: any;
 }
 
-export function ClassGroupsGrid({ trigger, onEditClassGroup }: ClassGroupsGridProps) {
+export function ClassGroupsGrid({ trigger, onEditClassGroup, externalFilters }: ClassGroupsGridProps) {
   const { t } = useTranslation();
-  const { data, rowCount, isLoading, isFetching, fetchClassGroups } = useClassGroups();
+  const { data, rowCount, isLoading, isFetching, fetchClassGroups } = useClassGroups(externalFilters || {});
+  const [programs, setPrograms] = useState<any[]>([]);
+  const [academicYears, setAcademicYears] = useState<any[]>([]);
+
+  useEffect(() => {
+    import("../api/programApi").then(({ programApi }) => {
+      programApi.getPrograms({ skip: 0, take: 500 }).then(res => setPrograms(res.data)).catch(console.error);
+    });
+    import("../api/academicYearApi").then(({ academicYearApi }) => {
+      academicYearApi.getAcademicYears({ skip: 0, take: 100 }).then(res => setAcademicYears(res.data)).catch(console.error);
+    });
+  }, []);
 
   useEffect(() => {
     if (trigger && trigger > 0) {
@@ -59,6 +71,8 @@ export function ClassGroupsGrid({ trigger, onEditClassGroup }: ClassGroupsGridPr
       accessorKey: "program.name",
       header: t("labels.program", "Program"),
       size: 150,
+      filterVariant: 'autocomplete',
+      filterSelectOptions: programs.map(p => ({ value: p.name, label: p.name })),
       muiTableHeadCellProps: { align: "center" },
       muiTableBodyCellProps: { align: "center" },
     },
@@ -66,6 +80,8 @@ export function ClassGroupsGrid({ trigger, onEditClassGroup }: ClassGroupsGridPr
       accessorKey: "academicYear.name",
       header: t("labels.academic_year", "Academic Year"),
       size: 150,
+      filterVariant: 'autocomplete',
+      filterSelectOptions: academicYears.map(y => ({ value: y.name, label: y.name })),
       muiTableHeadCellProps: { align: "center" },
       muiTableBodyCellProps: { align: "center" },
     },

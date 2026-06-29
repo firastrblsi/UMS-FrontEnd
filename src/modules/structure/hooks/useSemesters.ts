@@ -3,7 +3,7 @@ import type { FetchDataParams } from '@/shared/ui/DataTable';
 import { semesterApi } from '../api/semesterApi';
 import type { Semester } from '../api/semesterApi';
 
-export function useSemesters() {
+export function useSemesters(externalFilters?: any) {
   const [data, setData] = useState<Semester[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,6 +28,7 @@ export function useSemesters() {
         ...(params.sorting[0]
           ? { sort: params.sorting[0].id, order: params.sorting[0].desc ? 'desc' : 'asc' }
           : {}),
+        ...externalFilters,
       });
       setData(result.data);
       setRowCount(result.total);
