@@ -1,4 +1,4 @@
-{
+﻿{
   "auth": {
     "welcome_back": "Bienvenue de retour",
     "sign_in_header": "Connectez-vous à votre compte pour continuer",
@@ -281,5 +281,16 @@
     "confirm_close_message": "Vous avez des modifications non enregistrées. Voulez-vous vraiment fermer ? Toutes les modifications seront perdues.",
     "keep_editing": "Continuer l'édition",
     "discard": "Abandonner"
+  },
+  "profile": {
+    "edit_profile": "Modifier le profil",
+    "update_success": "Profil mis a jour avec succes",
+    "cancel": "Annuler",
+    "personal_info": "Informations personnelles",
+    "guardian_info": "Informations du tuteur",
+    "medical_info": "Informations medicales",
+    "professional": "Professionnel",
+    "education": "Formation",
+    "click_to_change_avatar": "Cliquer pour changer l'avatar"
   }
 }

@@ -46,6 +46,16 @@ class TeacherApi extends BaseApi {
     return res.data;
   }
 
+  async getMyTeacherProfile(): Promise<any> {
+    const res = await axiosInstance.get('/teacher-profiles/me');
+    return res.data;
+  }
+
+  async updateMyTeacherProfile(data: Partial<UpdateTeacherPayload>): Promise<any> {
+    const res = await axiosInstance.patch('/teacher-profiles/me', data);
+    return res.data;
+  }
+
   async createTeacher(data: CreateTeacherPayload): Promise<void> {
     // 1. Create User
     const userPayload = {

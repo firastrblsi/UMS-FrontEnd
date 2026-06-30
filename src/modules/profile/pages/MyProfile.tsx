@@ -6,15 +6,12 @@ import { studentApi } from "@/modules/students/api/studentApi";
 import { teacherApi } from "@/modules/teachers/api/teacherApi";
 import type { Student } from "@/modules/students/types/student.types";
 import type { Teacher } from "@/modules/teachers/types/teacher.types";
+import type { User } from "@/modules/auth/types/auth";
 import Loader from "@/shared/ui/Loader";
+import { Button } from "@/shared/ui/Button";
+import EditMyProfileForm from "@/modules/profile/components/EditMyProfileForm";
 
-// Import the existing views from the dialogs, but maybe we can just render the grid ones
-// Or since the dialogs render the components directly, we could just reuse the components if we extract them,
-// OR since we already have the raw data, we can just build a standalone view here.
-// For simplicity and matching the dialogs, we can recreate the same layout or import the Dialog components and force them open.
-// But a dedicated page is better.
-
-import { Building2, Mail, Phone, Calendar, BadgeCheck, GraduationCap, MapPin, Briefcase } from "lucide-react";
+import { Building2, Mail, Phone, Calendar, BadgeCheck, GraduationCap, MapPin, Briefcase, Pencil } from "lucide-react";
 
 
 export default function MyProfile() {
@@ -25,6 +22,7 @@ export default function MyProfile() {
   const [error, setError] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -53,6 +51,16 @@ export default function MyProfile() {
     fetchProfile();
   }, [user]);
 
+  const handleEditSuccess = (_updatedUser: User) => {
+    setIsEditing(false);
+    // Re-fetch profile to reflect any changes
+    if (user?.role === "STUDENT") {
+      studentApi.getProfileByUserId(user.id).then(setProfile).catch(console.error);
+    } else if (user?.role === "TEACHER") {
+      teacherApi.getProfileByUserId(user.id).then(setProfile).catch(console.error);
+    }
+  };
+
   if (isLoading) return <Loader />;
 
   if (error) {
@@ -63,20 +71,37 @@ export default function MyProfile() {
     return (
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-4">{t("routes.my_profile", "My Profile")}</h1>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-2xl font-bold">
-              {user.firstName?.charAt(0)}{user.lastName?.charAt(0)}
-            </div>
-            <div>
-              <h2 className="text-xl font-bold">{user.firstName} {user.lastName}</h2>
-              <p className="text-slate-500">{user.email}</p>
-              <div className="mt-2 inline-block px-3 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-full">
-                {t("labels.administrator", "ADMINISTRATOR")}
+        {isEditing ? (
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <EditMyProfileForm
+              user={user}
+              profile={null}
+              onSuccess={handleEditSuccess}
+              onCancel={() => setIsEditing(false)}
+            />
+          </div>
+        ) : (
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-2xl font-bold">
+                  {user.firstName?.charAt(0)}{user.lastName?.charAt(0)}
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold">{user.firstName} {user.lastName}</h2>
+                  <p className="text-slate-500">{user.email}</p>
+                  <div className="mt-2 inline-block px-3 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-full">
+                    {t("labels.administrator", "ADMINISTRATOR")}
+                  </div>
+                </div>
               </div>
+              <Button buttonType="secondary" onClick={() => setIsEditing(true)}>
+                <Pencil className="w-4 h-4 mr-1" />
+                {t("profile.edit_profile", "Edit Profile")}
+              </Button>
             </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
@@ -92,6 +117,24 @@ export default function MyProfile() {
     if (user.profilePicture.url.startsWith("http")) return user.profilePicture.url;
     return `${import.meta.env.VITE_API_URL || "http://localhost:3000"}${user.profilePicture.url}`;
   };
+
+  if (isEditing && user) {
+    return (
+      <div className="flex flex-col gap-6 h-full pb-10">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-slate-900">{t("profile.edit_profile", "Edit Profile")}</h1>
+        </div>
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
+          <EditMyProfileForm
+            user={user}
+            profile={profile}
+            onSuccess={handleEditSuccess}
+            onCancel={() => setIsEditing(false)}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-10 h-full pb-10">
@@ -157,6 +200,10 @@ export default function MyProfile() {
                 {profile.employeeId}
               </div>
             )}
+            <Button buttonType="secondary" onClick={() => setIsEditing(true)} className="flex items-center gap-1">
+              <Pencil className="w-4 h-4" />
+              {t("profile.edit_profile", "Edit Profile")}
+            </Button>
           </div>
         </div>
       </div>
