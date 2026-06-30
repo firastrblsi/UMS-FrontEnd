@@ -71,6 +71,12 @@ const isStudent = (profile: any, role: string): profile is Student =>
 const isTeacher = (profile: any, role: string): profile is Teacher =>
   role === "TEACHER" && !!profile;
 
+/** Strip empty strings, undefined, and null so we only PATCH changed values. */
+const clean = <T extends Record<string, unknown>>(obj: T): Partial<T> =>
+  Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => v !== "" && v !== undefined && v !== null),
+  ) as Partial<T>;
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }: Props) {
@@ -86,12 +92,14 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
   const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(schema) as any,
     defaultValues: {
+      // Personal — only used for admin/teacher (student locks these)
       firstName: user.firstName ?? "",
       lastName: user.lastName ?? "",
       phone: user.phone ?? "",
       gender: user.gender ?? undefined,
       nationality: user.nationality ?? "",
 
+      // Student guardian
       guardianName: student?.guardianName ?? "",
       guardianRelation: student?.guardianRelation ?? "",
       guardianPhone: student?.guardianPhone ?? "",
@@ -102,6 +110,7 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
       nationalId: (student as any)?.nationalId ?? "",
       previousInstitution: (student as any)?.previousInstitution ?? "",
 
+      // Teacher professional / education
       title: (teacher as any)?.title ?? "",
       specialization: teacher?.specialization ?? "",
       officeRoom: teacher?.officeRoom ?? "",
@@ -125,40 +134,51 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
-      const updatedUser = await userApi.updateMe({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        phone: data.phone,
-        gender: data.gender,
-        nationality: data.nationality,
-      });
+      // Students cannot change firstName / lastName / gender / nationality —
+      // only send phone for them.
+      const mePayload =
+        user.role === "STUDENT"
+          ? clean({ phone: data.phone })
+          : clean({
+              firstName: data.firstName,
+              lastName: data.lastName,
+              phone: data.phone,
+              gender: data.gender,
+              nationality: data.nationality,
+            });
+
+      const updatedUser = await userApi.updateMe(mePayload);
 
       if (student) {
-        await studentApi.updateMyStudentProfile({
-          guardianName: data.guardianName,
-          guardianRelation: data.guardianRelation,
-          guardianPhone: data.guardianPhone,
-          guardianEmail: data.guardianEmail,
-          hasMedicalNeeds: data.hasMedicalNeeds,
-          medicalNotes: data.medicalNotes,
-          transportMode: data.transportMode,
-          nationalId: data.nationalId,
-          previousInstitution: data.previousInstitution,
-        });
+        await studentApi.updateMyStudentProfile(
+          clean({
+            guardianName: data.guardianName,
+            guardianRelation: data.guardianRelation,
+            guardianPhone: data.guardianPhone,
+            guardianEmail: data.guardianEmail,
+            hasMedicalNeeds: data.hasMedicalNeeds,
+            medicalNotes: data.medicalNotes,
+            transportMode: data.transportMode,
+            nationalId: data.nationalId,
+            previousInstitution: data.previousInstitution,
+          }),
+        );
       }
 
       if (teacher) {
-        await teacherApi.updateMyTeacherProfile({
-          title: data.title,
-          specialization: data.specialization,
-          officeRoom: data.officeRoom,
-          officeHours: data.officeHours,
-          professionalEmail: data.professionalEmail,
-          bio: data.bio,
-          highestDegree: data.highestDegree,
-          degreeField: data.degreeField,
-          degreeInstitution: data.degreeInstitution,
-        });
+        await teacherApi.updateMyTeacherProfile(
+          clean({
+            title: data.title,
+            specialization: data.specialization,
+            officeRoom: data.officeRoom,
+            officeHours: data.officeHours,
+            professionalEmail: data.professionalEmail,
+            bio: data.bio,
+            highestDegree: data.highestDegree,
+            degreeField: data.degreeField,
+            degreeInstitution: data.degreeInstitution,
+          }),
+        );
       }
 
       if (avatarFile) {
@@ -186,8 +206,10 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
     }
   };
 
+  // ── Avatar ─────────────────────────────────────────────────────────────────
+
   const AvatarField = (
-    <div className="flex flex-col items-center gap-2 mb-4">
+    <div className="flex flex-col items-center gap-2 mb-4 md:col-span-2">
       <div
         className="w-24 h-24 rounded-full border-2 border-dashed border-slate-300 flex items-center justify-center overflow-hidden bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors"
         onClick={() => document.getElementById("edit-avatar-upload")?.click()}
@@ -207,25 +229,93 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
     </div>
   );
 
+  // ── Personal Info — Admin / Teacher (all fields editable, firstName/lastName required) ──
+
   const PersonalInfoTab = (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
       {AvatarField}
-      <Input label={t("labels.first_name", "First Name")} error={errors.firstName?.message} {...register("firstName")} />
-      <Input label={t("labels.last_name", "Last Name")} error={errors.lastName?.message} {...register("lastName")} />
-      <Input label={t("labels.phone_number", "Phone")} error={errors.phone?.message} {...register("phone")} />
+      <Input
+        label={t("teacher.first_name", "First Name")}
+        required
+        error={errors.firstName?.message}
+        {...register("firstName")}
+      />
+      <Input
+        label={t("teacher.last_name", "Last Name")}
+        required
+        error={errors.lastName?.message}
+        {...register("lastName")}
+      />
+      <Input
+        label={t("labels.phone_number", "Phone")}
+        error={errors.phone?.message}
+        {...register("phone")}
+      />
       <Select
         label={t("labels.gender", "Gender")}
         error={errors.gender?.message}
         options={[
+          { value: "", label: "—" },
           { value: "MALE", label: t("labels.male", "Male") },
           { value: "FEMALE", label: t("labels.female", "Female") },
           { value: "OTHER", label: t("labels.other", "Other") },
         ]}
         {...register("gender")}
       />
-      <Input label={t("labels.nationality", "Nationality")} error={errors.nationality?.message} {...register("nationality")} />
+      <Input
+        label={t("labels.nationality", "Nationality")}
+        error={errors.nationality?.message}
+        {...register("nationality")}
+      />
     </div>
   );
+
+  // ── Personal Info — Student (firstName/lastName/gender/nationality locked) ──
+
+  const StudentPersonalInfoTab = (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+      {AvatarField}
+      {/* Locked identity fields — shown but not editable */}
+      <Input
+        label={t("teacher.first_name", "First Name")}
+        value={user.firstName ?? ""}
+        disabled
+        readOnly
+      />
+      <Input
+        label={t("teacher.last_name", "Last Name")}
+        value={user.lastName ?? ""}
+        disabled
+        readOnly
+      />
+      {/* Phone — editable */}
+      <Input
+        label={t("labels.phone_number", "Phone")}
+        error={errors.phone?.message}
+        {...register("phone")}
+      />
+      {/* Locked identity fields continued */}
+      <Select
+        label={t("labels.gender", "Gender")}
+        value={user.gender ?? ""}
+        disabled
+        options={[
+          { value: "", label: "—" },
+          { value: "MALE", label: t("labels.male", "Male") },
+          { value: "FEMALE", label: t("labels.female", "Female") },
+          { value: "OTHER", label: t("labels.other", "Other") },
+        ]}
+      />
+      <Input
+        label={t("labels.nationality", "Nationality")}
+        value={user.nationality ?? ""}
+        disabled
+        readOnly
+      />
+    </div>
+  );
+
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
@@ -246,7 +336,7 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
             <Tabs.Trigger value="medical">{t("profile.medical_info", "Medical")}</Tabs.Trigger>
           </Tabs.List>
 
-          <Tabs.Content value="personal">{PersonalInfoTab}</Tabs.Content>
+          <Tabs.Content value="personal">{StudentPersonalInfoTab}</Tabs.Content>
 
           <Tabs.Content value="guardian">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
@@ -259,7 +349,7 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
 
           <Tabs.Content value="medical">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 md:col-span-2">
                 <input type="checkbox" id="hasMedicalNeeds" {...register("hasMedicalNeeds")} className="w-4 h-4 accent-indigo-600" />
                 <label htmlFor="hasMedicalNeeds" className="text-sm font-medium text-slate-700">
                   {t("student.has_medical_needs", "Has Medical Needs")}
