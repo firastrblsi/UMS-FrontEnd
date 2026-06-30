@@ -69,10 +69,10 @@ export default function MyProfile() {
 
   if (!profile && user?.role === "ADMIN") {
     return (
-      <div className="p-8">
-        <h1 className="text-2xl font-bold mb-4">{t("routes.my_profile", "My Profile")}</h1>
+      <div className="flex flex-col h-full overflow-hidden">
+        <h1 className="text-2xl mb-4 shrink-0">{t("routes.my_profile", "My Profile")}</h1>
         {isEditing ? (
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex-1 overflow-y-auto min-h-0">
             <EditMyProfileForm
               user={user}
               profile={null}
@@ -120,11 +120,11 @@ export default function MyProfile() {
 
   if (isEditing && user) {
     return (
-      <div className="flex flex-col gap-6 h-full pb-10">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-slate-900">{t("profile.edit_profile", "Edit Profile")}</h1>
+      <div className="flex flex-col h-full overflow-hidden">
+        <div className="flex items-center justify-between mb-4 shrink-0">
+          <h1 className="text-2xl ">{t("profile.edit_profile", "Edit Profile")}</h1>
         </div>
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 flex-1 overflow-y-auto min-h-0">
           <EditMyProfileForm
             user={user}
             profile={profile}

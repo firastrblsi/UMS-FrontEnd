@@ -134,10 +134,10 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
-      // Students cannot change firstName / lastName / gender / nationality —
-      // only send phone for them.
+      // Students and teachers cannot change firstName / lastName / gender /
+      // nationality — only send phone for those roles.
       const mePayload =
-        user.role === "STUDENT"
+        user.role === "STUDENT" || user.role === "TEACHER"
           ? clean({ phone: data.phone })
           : clean({
               firstName: data.firstName,
@@ -166,12 +166,10 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
       }
 
       if (teacher) {
+        // title, officeRoom, officeHours are locked — admin manages them
         await teacherApi.updateMyTeacherProfile(
           clean({
-            title: data.title,
             specialization: data.specialization,
-            officeRoom: data.officeRoom,
-            officeHours: data.officeHours,
             professionalEmail: data.professionalEmail,
             bio: data.bio,
             highestDegree: data.highestDegree,
@@ -229,7 +227,7 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
     </div>
   );
 
-  // ── Personal Info — Admin / Teacher (all fields editable, firstName/lastName required) ──
+  // ── Personal Info — Admin only (all fields editable, firstName/lastName required) ──
 
   const PersonalInfoTab = (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
@@ -267,6 +265,29 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
         error={errors.nationality?.message}
         {...register("nationality")}
       />
+    </div>
+  );
+
+  // ── Personal Info — Teacher (firstName/lastName/gender/nationality locked) ──
+
+  const TeacherPersonalInfoTab = (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+      {AvatarField}
+      <Input label={t("teacher.first_name", "First Name")} value={user.firstName ?? ""} disabled readOnly />
+      <Input label={t("teacher.last_name", "Last Name")} value={user.lastName ?? ""} disabled readOnly />
+      <Input label={t("labels.phone_number", "Phone")} error={errors.phone?.message} {...register("phone")} />
+      <Select
+        label={t("labels.gender", "Gender")}
+        value={user.gender ?? ""}
+        disabled
+        options={[
+          { value: "", label: "—" },
+          { value: "MALE", label: t("labels.male", "Male") },
+          { value: "FEMALE", label: t("labels.female", "Female") },
+          { value: "OTHER", label: t("labels.other", "Other") },
+        ]}
+      />
+      <Input label={t("labels.nationality", "Nationality")} value={user.nationality ?? ""} disabled readOnly />
     </div>
   );
 
@@ -372,12 +393,15 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
             <Tabs.Trigger value="education">{t("profile.education", "Education")}</Tabs.Trigger>
           </Tabs.List>
 
-          <Tabs.Content value="personal">{PersonalInfoTab}</Tabs.Content>
+          <Tabs.Content value="personal">{TeacherPersonalInfoTab}</Tabs.Content>
 
           <Tabs.Content value="professional">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+              {/* Title, Office Room, Office Hours — locked, managed by admin */}
               <Select
                 label={t("labels.title", "Title")}
+                value={(teacher as any)?.title ?? ""}
+                disabled
                 options={[
                   { value: "", label: "—" },
                   { value: "MR", label: "Mr." },
@@ -386,11 +410,10 @@ export default function EditMyProfileForm({ user, profile, onSuccess, onCancel }
                   { value: "MRS", label: "Mrs." },
                   { value: "MS", label: "Ms." },
                 ]}
-                {...register("title")}
               />
               <Input label={t("labels.specialization", "Specialization")} {...register("specialization")} />
-              <Input label={t("labels.office", "Office Room")} {...register("officeRoom")} />
-              <Input label={t("labels.office_hours", "Office Hours")} {...register("officeHours")} />
+              <Input label={t("labels.office", "Office Room")} value={teacher?.officeRoom ?? ""} disabled readOnly />
+              <Input label={t("labels.office_hours", "Office Hours")} value={teacher?.officeHours ?? ""} disabled readOnly />
               <Input label={t("labels.professional_email", "Professional Email")} error={errors.professionalEmail?.message} {...register("professionalEmail")} />
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-slate-700 mb-1">{t("labels.bio", "Bio")}</label>
