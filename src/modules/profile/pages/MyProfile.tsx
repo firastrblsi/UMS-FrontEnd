@@ -11,7 +11,8 @@ import Loader from "@/shared/ui/Loader";
 import { Button } from "@/shared/ui/Button";
 import EditMyProfileForm from "@/modules/profile/components/EditMyProfileForm";
 
-import { Building2, Mail, Phone, Calendar, BadgeCheck, GraduationCap, MapPin, Briefcase, Pencil } from "lucide-react";
+import { Building2, Mail, Phone, Calendar, BadgeCheck, GraduationCap, MapPin, Briefcase, Pencil, Lock } from "lucide-react";
+import ChangePasswordForm from "@/modules/profile/components/ChangePasswordForm";
 
 
 export default function MyProfile() {
@@ -23,6 +24,7 @@ export default function MyProfile() {
   const [imageError, setImageError] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [isEditing, setIsEditing] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -71,7 +73,15 @@ export default function MyProfile() {
     return (
       <div className="flex flex-col h-full overflow-hidden">
         <h1 className="text-2xl mb-4 shrink-0">{t("routes.my_profile", "My Profile")}</h1>
-        {isEditing ? (
+        {isChangingPassword ? (
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex-1 overflow-y-auto min-h-0">
+            <h2 className="text-lg font-semibold mb-6">{t("profile.change_password", "Change Password")}</h2>
+            <ChangePasswordForm
+              onSuccess={() => setIsChangingPassword(false)}
+              onCancel={() => setIsChangingPassword(false)}
+            />
+          </div>
+        ) : isEditing ? (
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex-1 overflow-y-auto min-h-0">
             <EditMyProfileForm
               user={user}
@@ -95,10 +105,16 @@ export default function MyProfile() {
                   </div>
                 </div>
               </div>
-              <Button buttonType="secondary" onClick={() => setIsEditing(true)}>
-                <Pencil className="w-4 h-4 mr-1" />
-                {t("profile.edit_profile", "Edit Profile")}
-              </Button>
+              <div className="flex gap-2">
+                <Button buttonType="secondary" onClick={() => setIsChangingPassword(true)}>
+                  <Lock className="w-4 h-4 mr-1" />
+                  {t("profile.change_password", "Change Password")}
+                </Button>
+                <Button buttonType="secondary" onClick={() => setIsEditing(true)}>
+                  <Pencil className="w-4 h-4 mr-1" />
+                  {t("profile.edit_profile", "Edit Profile")}
+                </Button>
+              </div>
             </div>
           </div>
         )}
@@ -117,6 +133,22 @@ export default function MyProfile() {
     if (user.profilePicture.url.startsWith("http")) return user.profilePicture.url;
     return `${import.meta.env.VITE_API_URL || "http://localhost:3000"}${user.profilePicture.url}`;
   };
+
+  if (isChangingPassword && user) {
+    return (
+      <div className="flex flex-col h-full overflow-hidden">
+        <div className="flex items-center justify-between mb-4 shrink-0">
+          <h1 className="text-2xl">{t("profile.change_password", "Change Password")}</h1>
+        </div>
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 flex-1 overflow-y-auto min-h-0">
+          <ChangePasswordForm
+            onSuccess={() => setIsChangingPassword(false)}
+            onCancel={() => setIsChangingPassword(false)}
+          />
+        </div>
+      </div>
+    );
+  }
 
   if (isEditing && user) {
     return (
@@ -200,6 +232,10 @@ export default function MyProfile() {
                 {profile.employeeId}
               </div>
             )}
+            <Button buttonType="secondary" onClick={() => setIsChangingPassword(true)} className="flex items-center gap-1">
+              <Lock className="w-4 h-4" />
+              {t("profile.change_password", "Change Password")}
+            </Button>
             <Button buttonType="secondary" onClick={() => setIsEditing(true)} className="flex items-center gap-1">
               <Pencil className="w-4 h-4" />
               {t("profile.edit_profile", "Edit Profile")}

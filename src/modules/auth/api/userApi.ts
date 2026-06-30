@@ -25,4 +25,8 @@ export const userApi = {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
+
+  changePassword(data: { currentPassword: string; newPassword: string }): Promise<{ message: string }> {
+    return axiosInstance.post("/auth/change-password", data).then((r) => r.data);
+  },
 };
