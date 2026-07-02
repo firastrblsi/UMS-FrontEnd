@@ -6,7 +6,7 @@ import {
 import { authApi } from "../api/authApi";
 import { saveUser, loadUser, clearUser } from "../services/authStorage";
 import { setAccessToken } from "@/core/utils/token.ts";
-import type { AuthState } from "../types/auth";
+import type { AuthState, User } from "../types/auth";
 import type { LoginFulfilledPayload } from "./authTypes";
 import { singleFlight } from "@/core/utils/singleFlight.ts";
 
@@ -85,6 +85,10 @@ const authSlice = createSlice({
         state.user = cached;
       }
     },
+    setUser(state, action: PayloadAction<User>) {
+      state.user = action.payload;
+      saveUser(action.payload);
+    },
   },
   extraReducers: (builder) => {
     // ── login ──────────────────────────────────────────────────
@@ -130,7 +134,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError, preloadUser } = authSlice.actions;
+export const { clearError, preloadUser, setUser } = authSlice.actions;
 export const authReducer = authSlice.reducer;
 
 function extractErrorMessage(err: unknown): string | undefined {

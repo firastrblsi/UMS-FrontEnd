@@ -283,5 +283,19 @@
     "confirm_close_message": "You have unsaved changes. Are you sure you want to close? All changes will be lost.",
     "keep_editing": "Keep editing",
     "discard": "Discard"
+  },
+  "profile": {
+    "edit_profile": "Edit Profile",
+    "update_success": "Profile updated successfully",
+    "cancel": "Cancel",
+    "personal_info": "Personal Info",
+    "guardian_info": "Guardian Info",
+    "medical_info": "Medical Information",
+    "professional": "Professional",
+    "education": "Education",
+    "click_to_change_avatar": "Click to change avatar",
+    "change_password": "Change Password",
+    "current_password": "Current Password",
+    "password_changed_success": "Your password has been changed successfully"
   }
 }

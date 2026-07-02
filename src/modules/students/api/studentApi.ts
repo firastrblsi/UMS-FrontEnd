@@ -52,6 +52,16 @@ class StudentApi extends BaseApi {
     return res.data;
   }
 
+  async getMyStudentProfile(): Promise<any> {
+    const res = await axiosInstance.get('/student-profiles/me');
+    return res.data;
+  }
+
+  async updateMyStudentProfile(data: Partial<UpdateStudentPayload>): Promise<any> {
+    const res = await axiosInstance.patch('/student-profiles/me', data);
+    return res.data;
+  }
+
   async createStudent(data: CreateStudentPayload): Promise<void> {
     // 1. Create User
     const userPayload = {
