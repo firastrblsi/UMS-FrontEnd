@@ -5,7 +5,7 @@ import { DataTable } from "@/shared/ui/DataTable";
 import { useCourseSections } from "../hooks/useCourseSections";
 import type { CourseSection } from "../types/university.types";
 import type { CourseSectionListParams } from "../api/courseSectionApi";
-import { Edit2, Trash2, Users } from "lucide-react";
+import { Edit2, Trash2, Users, Calendar } from "lucide-react";
 import { courseSectionApi } from "../api/courseSectionApi";
 import { toaster } from "@/components/ui/toaster";
 
@@ -14,9 +14,10 @@ interface CourseSectionsGridProps {
   trigger?: number;
   onEditSection?: (section: CourseSection) => void;
   onManageStudents?: (section: CourseSection) => void;
+  onScheduleSection?: (section: CourseSection) => void;
 }
 
-export function CourseSectionsGrid({ externalFilters, trigger, onEditSection, onManageStudents }: CourseSectionsGridProps) {
+export function CourseSectionsGrid({ externalFilters, trigger, onEditSection, onManageStudents, onScheduleSection }: CourseSectionsGridProps) {
   const { t } = useTranslation();
   const { data, rowCount, isLoading, isFetching, fetchCourseSections } = useCourseSections(externalFilters || {});
   
@@ -117,6 +118,16 @@ export function CourseSectionsGrid({ externalFilters, trigger, onEditSection, on
             <button
               onClick={(e) => {
                 e.stopPropagation();
+                onScheduleSection?.(row.original);
+              }}
+              className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-full transition-colors"
+              title={t("global.schedule_class", "Schedule Class")}
+            >
+              <Calendar size={16} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
                 onManageStudents?.(row.original);
               }}
               className="p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-full transition-colors"
@@ -148,7 +159,7 @@ export function CourseSectionsGrid({ externalFilters, trigger, onEditSection, on
         ),
       },
     ],
-    [t, onEditSection, onManageStudents, courses, semesters, classGroups]
+    [t, onEditSection, onManageStudents, onScheduleSection, courses, semesters, classGroups]
   );
 
   return (

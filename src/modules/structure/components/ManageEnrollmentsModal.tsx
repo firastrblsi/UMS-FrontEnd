@@ -31,7 +31,7 @@ export function ManageEnrollmentsModal({ section, onClose }: ManageEnrollmentsMo
     setLoading(true);
     try {
       const res = await studentEnrollmentApi.getEnrollments({
-        filters: JSON.stringify({ courseSectionId: section.id }),
+        filters: JSON.stringify([{ id: 'courseSectionId', value: section.id }]),
         take: 1000 // Get all for now
       });
       setEnrollments(res.data);

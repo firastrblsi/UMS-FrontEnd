@@ -98,15 +98,19 @@ export const AsyncSearchableSelect = forwardRef<HTMLInputElement, AsyncSearchabl
         <input type="hidden" value={value} ref={ref} />
 
         <div
-          className={`flex items-center justify-between w-full min-h-[43px] px-3 bg-white border rounded-[15px] cursor-pointer transition-colors ${
-            error ? 'border-red-500' : 'border-slate-200 hover:border-blue-400'
+          className={`flex items-center justify-between w-full min-h-[43px] px-3 bg-white border rounded-[16px] cursor-pointer transition-colors ${
+            error ? 'border-red-500' : 'border-[#718096] hover:border-gray-900 focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900'
           } ${disabled ? 'opacity-50 cursor-not-allowed bg-slate-50' : ''}`}
           onClick={handleOpen}
         >
-          <div className="flex-1 truncate text-sm text-slate-700">
-            {selectedOption ? selectedOption.label : <span className="text-slate-400">{placeholder}</span>}
+          <div className="flex-1 truncate text-sm">
+            {selectedOption ? (
+              <span className="text-[#1E293B]">{selectedOption.label}</span>
+            ) : (
+              <span className="text-[#94A3B8]">{placeholder}</span>
+            )}
           </div>
-          <div className="flex items-center text-slate-400 gap-1">
+          <div className="flex items-center text-[#718096] gap-1">
             {value && !disabled && (
               <X 
                 size={16} 

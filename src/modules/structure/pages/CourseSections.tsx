@@ -6,6 +6,7 @@ import { Dialog } from "@/shared/ui/Dialog";
 import { AddCourseSectionForm } from "../components/AddCourseSectionForm";
 import { UpdateCourseSectionForm } from "../components/UpdateCourseSectionForm";
 import { ManageEnrollmentsModal } from "../components/ManageEnrollmentsModal";
+import { ManageSectionTimetableModal } from "../components/ManageSectionTimetableModal";
 import type { CourseSection } from "../types/university.types";
 import { useTranslation } from "react-i18next";
 
@@ -16,6 +17,7 @@ export function CourseSections() {
   const [showAddSection, setShowAddSection] = useState(false);
   const [editingSection, setEditingSection] = useState<CourseSection | null>(null);
   const [managingStudentsSection, setManagingStudentsSection] = useState<CourseSection | null>(null);
+  const [schedulingSection, setSchedulingSection] = useState<CourseSection | null>(null);
 
   const handleSuccess = () => {
     setShowAddSection(false);
@@ -58,6 +60,7 @@ export function CourseSections() {
           trigger={trigger} 
           onEditSection={(section) => setEditingSection(section)}
           onManageStudents={(section) => setManagingStudentsSection(section)}
+          onScheduleSection={(section) => setSchedulingSection(section)}
         />
       </div>
 
@@ -98,6 +101,20 @@ export function CourseSections() {
           <ManageEnrollmentsModal
             section={managingStudentsSection}
             onClose={() => setManagingStudentsSection(null)}
+          />
+        )}
+      </Dialog>
+
+      <Dialog
+        open={!!schedulingSection}
+        onClose={() => setSchedulingSection(null)}
+        title={schedulingSection ? `${schedulingSection.course?.name || ''} - ${schedulingSection.classGroup?.name || ''}` : t("global.timetable_sessions", "Scheduled Classes")}
+        size="xl"
+      >
+        {schedulingSection && (
+          <ManageSectionTimetableModal
+            section={schedulingSection}
+            onClose={() => setSchedulingSection(null)}
           />
         )}
       </Dialog>

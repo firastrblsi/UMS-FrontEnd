@@ -8,8 +8,9 @@ interface DialogProps {
   onClose: () => void;
   title: string;
   children: ReactNode;
-  size?: "sm" | "md" | "lg" | "xl" | "full";
+  size?: "sm" | "md" | "lg" | "xl" | "xs" | "full" | "cover";
   bodyOverflow?: "auto" | "visible" | "hidden";
+  requireConfirmOnClose?: boolean;
 }
 
 export function Dialog({
@@ -19,11 +20,18 @@ export function Dialog({
   children,
   size = "md",
   bodyOverflow = "auto",
+  requireConfirmOnClose = true,
 }: DialogProps) {
   const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleCloseAttempt = () => setShowConfirm(true);
+  const handleCloseAttempt = () => {
+    if (requireConfirmOnClose) {
+      setShowConfirm(true);
+    } else {
+      onClose();
+    }
+  };
   const handleConfirmClose = () => {
     setShowConfirm(false);
     onClose();
@@ -43,7 +51,7 @@ export function Dialog({
       >
         <ChakraDialog.Backdrop />
         <ChakraDialog.Positioner>
-          <ChakraDialog.Content>
+          <ChakraDialog.Content borderRadius="xl" overflow="hidden">
             {/* Header */}
             <ChakraDialog.Header
               display="flex"

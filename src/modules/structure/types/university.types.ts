@@ -128,3 +128,17 @@ export interface CourseSection {
   // teacher?: TeacherProfile; // We might not have TeacherProfile defined yet, use any or add it if needed
   teacher?: any;
 }
+
+export interface TimetableSession {
+  id: string;
+  courseSectionId: string;
+  roomId: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  type: 'LECTURE' | 'TUTORIAL' | 'PRACTICAL' | 'EXAM' | 'SEMINAR';
+  createdAt: string;
+  updatedAt: string;
+  courseSection?: CourseSection;
+  room?: Room;
+}

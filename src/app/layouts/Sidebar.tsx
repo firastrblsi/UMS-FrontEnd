@@ -20,7 +20,8 @@ import {
   CalendarRange,
   Book,
   FileText,
-  Library
+  Library,
+  ClipboardList
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAppDispatch } from "@/core/hooks/useAppDispatch";
@@ -45,6 +46,18 @@ const NAV_ITEMS: NavItem[] = [
     to: "/dashboard",
     icon: House,
     labelKey: "routes.dashboard",
+    roles: ["ADMIN", "TEACHER", "STUDENT"],
+  },
+  {
+    to: "/attendance",
+    icon: ClipboardList,
+    labelKey: "routes.attendance",
+    roles: ["ADMIN", "TEACHER"],
+  },
+  {
+    to: "/timetable",
+    icon: Calendar,
+    labelKey: "routes.timetables",
     roles: ["ADMIN", "TEACHER", "STUDENT"],
   },
   {
@@ -93,6 +106,12 @@ const NAV_ITEMS: NavItem[] = [
     icon: User,
     labelKey: "routes.my_profile",
     roles: ["TEACHER", "STUDENT", "ADMIN"],
+  },
+  {
+    to: "/my-attendance",
+    icon: ClipboardList,
+    labelKey: "routes.my_attendance",
+    roles: ["STUDENT"],
   },
 ];
 

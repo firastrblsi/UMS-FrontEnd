@@ -29,8 +29,11 @@ import TeachingModules from "@/modules/structure/pages/TeachingModules";
 import Courses from "@/modules/structure/pages/Courses";
 import { CourseSections } from "@/modules/structure/pages/CourseSections";
 import Curriculums from "@/modules/structure/pages/Curriculums";
+import Timetables from "@/modules/structure/pages/Timetables";
+import ReviewAbsences from "@/modules/structure/pages/ReviewAbsences";
 import Settings from "@/modules/dashboard/pages/Settings";
 import MyProfile from "@/modules/profile/pages/MyProfile";
+import MyAttendance from "@/modules/students/pages/MyAttendance";
 
 function NoAuthGuard({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
@@ -91,12 +94,12 @@ export function AppRouter() {
 
                 <Route
                   element={
-                    <ProtectedRoute allowedRoles={["ADMIN", "TEACHER"]} />
+                    <ProtectedRoute allowedRoles={["ADMIN", "TEACHER", "STUDENT"]} />
                   }
                 >
                   <Route
                     path="/attendance"
-                    element={<div className="p-8">Attendance — Sprint 3</div>}
+                    element={<ReviewAbsences />}
                   />
                   <Route
                     path="/grades"
@@ -104,7 +107,7 @@ export function AppRouter() {
                   />
                   <Route
                     path="/timetable"
-                    element={<div className="p-8">Timetable — Sprint 3</div>}
+                    element={<Timetables />}
                   />
                 </Route>
 
@@ -145,9 +148,7 @@ export function AppRouter() {
                   />
                   <Route
                     path="/my-attendance"
-                    element={
-                      <div className="p-8">My attendance — Sprint 3</div>
-                    }
+                    element={<MyAttendance />}
                   />
                   <Route
                     path="/my-finance"
